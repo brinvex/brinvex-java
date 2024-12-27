@@ -26,6 +26,10 @@ public class DateUtil {
         return date1.isBefore(date2) ? date1 : date2;
     }
 
+    public static LocalDate minDate(LocalDate date1, LocalDate date2, LocalDate date3) {
+        return minDate(date1, minDate(date2, date3));
+    }
+
     public static LocalDateTime minDateTime(LocalDateTime dateTime1, LocalDateTime dateTime2) {
         return dateTime1.isBefore(dateTime2) ? dateTime1 : dateTime2;
     }
