@@ -135,6 +135,14 @@ public class Num {
         };
     }
 
+    public static BigDecimal min(BigDecimal num1, BigDecimal num2) {
+        return num1.compareTo(num2) <= 0 ? num1 : num2;
+    }
+
+    public static BigDecimal max(BigDecimal num1, BigDecimal num2) {
+        return num1.compareTo(num2) >= 0 ? num1 : num2;
+    }
+
     public static BigDecimal max(Collection<BigDecimal> decimals) {
         return switch (decimals.size()) {
             case 0 -> null;
