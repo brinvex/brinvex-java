@@ -9,14 +9,14 @@ _Brinvex Java_ is a micro-library containing various helper utilities for Java.
 </properties>    
 
 <repository>
-    <id>brinvex-repo</id>
-    <name>Brinvex Repository</name>
-    <url>https://github.com/brinvex/brinvex-repo/raw/main/</url>
+    <id>github-pubrepo-brinvex</id>
+    <name>Github Public Repository - Brinvex</name>
+    <url>https://github.com/brinvex/brinvex-pubrepo/raw/main/</url>
     <snapshots>
         <enabled>false</enabled>
     </snapshots>
 </repository>
-        
+
 <dependency>
     <groupId>com.brinvex</groupId>
     <artifactId>brinvex-java</artifactId>
