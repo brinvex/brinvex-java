@@ -67,6 +67,18 @@ public class DateUtil {
         };
     }
 
+    public static LocalDate plusWorkDays(LocalDate date, int daysToAdd) {
+        if (daysToAdd <= 0) {
+            throw new IllegalArgumentException("daysToAdd must be greater than 0; date=%s, daysToAdd=%s"
+                    .formatted(date, daysToAdd));
+        }
+        return switch (date.getDayOfWeek()) {
+            case FRIDAY -> date.plusDays(daysToAdd + 2);
+            case SATURDAY -> date.plusDays(daysToAdd + 1);
+            default -> date.plusDays(daysToAdd);
+        };
+    }
+
     public static boolean isFirstDayOfMonth(LocalDate day) {
         return day.getDayOfMonth() == 1;
     }
