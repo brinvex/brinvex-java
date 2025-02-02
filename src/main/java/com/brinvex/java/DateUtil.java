@@ -1,5 +1,6 @@
 package com.brinvex.java;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -67,16 +68,69 @@ public class DateUtil {
         };
     }
 
+    /**
+     * Adds (or subtracts) the specified number of work days (Monday through Friday) to/from the given date.
+     * If the given date falls on a weekend, it is normalized to the nearest workday:
+     * <ul>
+     *     <li>For a positive daysToAdd: Saturday and Sunday are moved to the following Monday.</li>
+     *     <li>For a negative daysToAdd: Saturday and Sunday are moved to the preceding Friday.</li>
+     * </ul>
+     *
+     * @param date      the starting date
+     * @param daysToAdd the number of work days to add (or subtract, if negative)
+     * @return the resulting LocalDate after adding the work days
+     */
+    @SuppressWarnings("ExtractMethodRecommender")
     public static LocalDate plusWorkDays(LocalDate date, int daysToAdd) {
-        if (daysToAdd <= 0) {
-            throw new IllegalArgumentException("daysToAdd must be greater than 0; date=%s, daysToAdd=%s"
-                    .formatted(date, daysToAdd));
+        if (daysToAdd == 0) {
+            return date;
         }
-        return switch (date.getDayOfWeek()) {
-            case FRIDAY -> date.plusDays(daysToAdd + 2);
-            case SATURDAY -> date.plusDays(daysToAdd + 1);
-            default -> date.plusDays(daysToAdd);
-        };
+
+        // Normalize the start date if it falls on a weekend.
+        DayOfWeek dow = date.getDayOfWeek();
+        if (daysToAdd > 0) {
+            if (dow == DayOfWeek.SATURDAY) {
+                date = date.plusDays(2);
+            } else if (dow == DayOfWeek.SUNDAY) {
+                date = date.plusDays(1);
+            }
+        } else {
+            if (dow == DayOfWeek.SATURDAY) {
+                date = date.minusDays(1);
+            } else if (dow == DayOfWeek.SUNDAY) {
+                date = date.minusDays(2);
+            }
+        }
+
+        if (daysToAdd > 0) {
+            // Calculate whole weeks and extra days.
+            int fullWeeks = daysToAdd / 5;
+            int extraDays = daysToAdd % 5;
+            LocalDate result = date.plusDays(fullWeeks * 7L);
+
+            // Determine day-of-week as an int where Monday = 1 ... Friday = 5.
+            int currentDow = result.getDayOfWeek().getValue();
+            // If adding the extra days would run past Friday, skip the weekend.
+            if (currentDow + extraDays > 5) {
+                extraDays += 2;
+            }
+            result = result.plusDays(extraDays);
+            return result;
+        } else { // daysToAdd < 0
+            // Convert daysToAdd to a positive number for calculation.
+            int absDays = -daysToAdd;
+            int fullWeeks = absDays / 5;
+            int extraDays = absDays % 5;
+            LocalDate result = date.minusDays(fullWeeks * 7L);
+
+            int currentDow = result.getDayOfWeek().getValue();
+            // If subtracting extra days would run before Monday, skip the weekend.
+            if (currentDow - extraDays < 1) {
+                extraDays += 2;
+            }
+            result = result.minusDays(extraDays);
+            return result;
+        }
     }
 
     public static boolean isFirstDayOfMonth(LocalDate day) {
