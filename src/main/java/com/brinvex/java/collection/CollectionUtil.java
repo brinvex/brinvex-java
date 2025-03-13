@@ -10,6 +10,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.NavigableMap;
 import java.util.Objects;
 import java.util.Set;
 import java.util.SortedMap;
@@ -19,6 +20,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
+import static java.util.Collections.emptyNavigableMap;
 import static java.util.Collections.emptySortedMap;
 
 @SuppressWarnings("DuplicatedCode")
@@ -322,6 +324,33 @@ public class CollectionUtil {
             return map.tailMap(fromKeyIncl);
         } else  {
             return emptySortedMap();
+        }
+    }
+
+    public static <K extends Comparable<? super K>, V> NavigableMap<K, V> rangeSafeSubMap(NavigableMap<K, V> map, K fromKeyIncl, K toKeyExcl) {
+        if (map.isEmpty()) {
+            return map;
+        }
+        K oldFirstKey = map.firstKey();
+        K oldLastKey = map.lastKey();
+        if (fromKeyIncl.compareTo(oldFirstKey) <= 0) {
+            if (toKeyExcl.compareTo(oldLastKey) > 0) {
+                return map;
+            } else if (toKeyExcl.compareTo(oldFirstKey) > 0) {
+                return map.headMap(toKeyExcl, false);
+            } else {
+                return emptyNavigableMap();
+            }
+        } else if (fromKeyIncl.compareTo(oldLastKey) <= 0) {
+            if (toKeyExcl.compareTo(oldLastKey) > 0) {
+                return map.tailMap(fromKeyIncl, true);
+            } else if (toKeyExcl.compareTo(fromKeyIncl) > 0) {
+                return map.subMap(fromKeyIncl, true, toKeyExcl, false);
+            } else {
+                return emptyNavigableMap();
+            }
+        } else  {
+            return emptyNavigableMap();
         }
     }
 

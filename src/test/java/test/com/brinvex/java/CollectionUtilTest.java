@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.NavigableMap;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -69,9 +70,35 @@ public class CollectionUtilTest {
     }
 
     @Test
-    void subMap() {
+    void sortedSubMap() {
         SortedMap<String, String> m1 = new TreeMap<>(Map.of("a", "A", "b", "B"));
         SortedMap<String, String> m2 = m1.subMap("b", "c");
+
+        assertEquals(Map.of("b", "B"), m2);
+        assertThrows(IllegalArgumentException.class, () -> m2.subMap("a", "a"));
+        assertEquals(emptyMap(), rangeSafeSubMap(m2, "a", "a"));
+        assertEquals(emptyMap(), rangeSafeSubMap(m2, "A", "A"));
+        assertEquals(emptyMap(), rangeSafeSubMap(m1, "A", "a"));
+        assertEquals(Map.of("a", "A"), rangeSafeSubMap(m1, "A", "b"));
+        assertEquals(m1, rangeSafeSubMap(m1, "A", "c"));
+        assertEquals(emptyMap(), rangeSafeSubMap(m1, "a", "a"));
+        assertEquals(emptyMap(), rangeSafeSubMap(m1, "b", "b"));
+
+        m1.put("b2", "B2");
+        assertEquals(Map.of("b", "B", "b2", "B2"), m2);
+
+        m1.put("k", "K");
+        assertEquals(Map.of("b", "B", "b2", "B2"), m2);
+
+        assertThrows(IllegalArgumentException.class, () -> m1.subMap("b", "b").put("b3", "B3"));
+        assertThrows(IllegalArgumentException.class, () -> m1.subMap("b", "b").put("b", "B3"));
+
+    }
+
+    @Test
+    void navigableSubMap() {
+        NavigableMap<String, String> m1 = new TreeMap<>(Map.of("a", "A", "b", "B"));
+        NavigableMap<String, String> m2 = m1.subMap("b", true, "c", false);
 
         assertEquals(Map.of("b", "B"), m2);
         assertThrows(IllegalArgumentException.class, () -> m2.subMap("a", "a"));
