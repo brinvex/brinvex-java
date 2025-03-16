@@ -12,6 +12,19 @@ public sealed interface DateRange {
 
     LocalDate endExcl();
 
+    default InclDateRange toIncl() {
+        return this instanceof InclDateRange ? (InclDateRange) this : new InclDateRange(startIncl(), endIncl());
+    }
+    default StartExclDateRange toStartExcl() {
+        return this instanceof StartExclDateRange ? (StartExclDateRange) this : new StartExclDateRange(startExcl(), endIncl());
+    }
+    default EndExclDateRange toEndExcl() {
+        return this instanceof EndExclDateRange ? (EndExclDateRange) this : new EndExclDateRange(startIncl(), endExcl());
+    }
+    default ExclDateRange toExcl() {
+        return this instanceof ExclDateRange ? (ExclDateRange) this : new ExclDateRange(startExcl(), endExcl());
+    }
+
     record InclDateRange(@Override LocalDate startIncl, @Override LocalDate endIncl) implements DateRange {
         @Override
         public LocalDate startExcl() {
