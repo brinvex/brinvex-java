@@ -4,6 +4,8 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DateUtil {
 
@@ -145,4 +147,30 @@ public class DateUtil {
         return day.getDayOfYear() == 1;
     }
 
+    public static List<DateInterval> splitIntoYearlyIntervals(LocalDate fromDateIncl, LocalDate toDateIncl) {
+        List<DateInterval> intervals = new ArrayList<>();
+
+        LocalDate start = fromDateIncl;
+        LocalDate endOfFirstYear = LocalDate.of(fromDateIncl.getYear(), 12, 31);
+
+        // First interval (partial)
+        if (!endOfFirstYear.isAfter(toDateIncl)) {
+            intervals.add(new DateInterval(start, endOfFirstYear));
+            start = endOfFirstYear.plusDays(1);
+        }
+
+        // Full-year intervals
+        while (start.plusYears(1).minusDays(1).isBefore(toDateIncl)) {
+            LocalDate end = start.plusYears(1).minusDays(1);
+            intervals.add(new DateInterval(start, end));
+            start = end.plusDays(1);
+        }
+
+        // Last interval (partial)
+        if (start.isBefore(toDateIncl) || start.equals(toDateIncl)) {
+            intervals.add(new DateInterval(start, toDateIncl));
+        }
+
+        return intervals;
+    }
 }
