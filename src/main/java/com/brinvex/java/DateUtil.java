@@ -147,30 +147,52 @@ public class DateUtil {
         return day.getDayOfYear() == 1;
     }
 
-    public static List<DateInterval> splitIntoYearlyIntervals(LocalDate fromDateIncl, LocalDate toDateIncl) {
-        List<DateInterval> intervals = new ArrayList<>();
+    public static List<DateRange> splitIntoYearlyIntervals(DateRange range) {
+        LocalDate startIncl = range.startIncl();
+        LocalDate endIncl = range.endIncl();
 
-        LocalDate start = fromDateIncl;
-        LocalDate endOfFirstYear = LocalDate.of(fromDateIncl.getYear(), 12, 31);
-
-        // First interval (partial)
-        if (!endOfFirstYear.isAfter(toDateIncl)) {
-            intervals.add(new DateInterval(start, endOfFirstYear));
-            start = endOfFirstYear.plusDays(1);
+        if (startIncl == null || endIncl == null) {
+            throw new IllegalArgumentException("Invalid date range: %s".formatted(range));
         }
 
-        // Full-year intervals
-        while (start.plusYears(1).minusDays(1).isBefore(toDateIncl)) {
-            LocalDate end = start.plusYears(1).minusDays(1);
-            intervals.add(new DateInterval(start, end));
-            start = end.plusDays(1);
+        List<DateRange> results = new ArrayList<>();
+        if (startIncl.isAfter(endIncl)) {
+            return results;
         }
 
-        // Last interval (partial)
-        if (start.isBefore(toDateIncl) || start.equals(toDateIncl)) {
-            intervals.add(new DateInterval(start, toDateIncl));
+        // First interval (preserve type)
+        LocalDate endOfFirstYear = LocalDate.of(startIncl.getYear(), 12, 31);
+        if (endOfFirstYear.isAfter(endIncl)) {
+            results.add(range);
+            return results;
+        }
+        results.add(createDateRange(range, startIncl, endOfFirstYear));
+        startIncl = endOfFirstYear.plusDays(1);
+
+        // Middle intervals (fully inclusive)
+        while (startIncl.plusYears(1).minusDays(1).isBefore(endIncl)) {
+            LocalDate endOfYear = startIncl.plusYears(1).minusDays(1);
+            results.add(new DateRange.InclDateRange(startIncl, endOfYear));
+            startIncl = endOfYear.plusDays(1);
         }
 
-        return intervals;
+        // Last interval (preserve type)
+        if (startIncl.isBefore(endIncl) || startIncl.equals(endIncl)) {
+            results.add(createDateRange(range, startIncl, endIncl));
+        }
+
+        return results;
     }
-}
+
+    private static DateRange createDateRange(DateRange original, LocalDate startIncl, LocalDate endIncl) {
+        if (original instanceof DateRange.InclDateRange) {
+            return new DateRange.InclDateRange(startIncl, endIncl);
+        } else if (original instanceof DateRange.StartExclDateRange) {
+            return new DateRange.StartExclDateRange(startIncl.minusDays(1), endIncl);
+        } else if (original instanceof DateRange.EndExclDateRange) {
+            return new DateRange.EndExclDateRange(startIncl, endIncl.plusDays(1));
+        } else if (original instanceof DateRange.ExclDateRange) {
+            return new DateRange.ExclDateRange(startIncl.minusDays(1), endIncl.plusDays(1));
+        }
+        throw new IllegalArgumentException("Unknown DateRange type: " + original);
+    }}
