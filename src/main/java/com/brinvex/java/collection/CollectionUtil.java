@@ -354,4 +354,15 @@ public class CollectionUtil {
         }
     }
 
+    public static <T> List<List<T>> toChunks(List<T> source, int chunkSize) {
+        if (chunkSize <= 0) {
+            throw new IllegalArgumentException("Chunk size must be greater than zero");
+        }
+
+        List<List<T>> chunks = new ArrayList<>();
+        for (int i = 0; i < source.size(); i += chunkSize) {
+            chunks.add(source.subList(i, Math.min(source.size(), i + chunkSize)));
+        }
+        return chunks;
+    }
 }
