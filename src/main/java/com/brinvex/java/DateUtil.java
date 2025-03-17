@@ -160,39 +160,28 @@ public class DateUtil {
             return results;
         }
 
-        // First interval (preserve type)
+        // First interval
         LocalDate endOfFirstYear = LocalDate.of(startIncl.getYear(), 12, 31);
         if (endOfFirstYear.isAfter(endIncl)) {
             results.add(range);
             return results;
         }
-        results.add(createDateRange(range, startIncl, endOfFirstYear));
+        results.add(DateRange.ofInclusive(startIncl, endOfFirstYear));
         startIncl = endOfFirstYear.plusDays(1);
 
         // Middle intervals (fully inclusive)
         while (startIncl.plusYears(1).minusDays(1).isBefore(endIncl)) {
             LocalDate endOfYear = startIncl.plusYears(1).minusDays(1);
-            results.add(new DateRange.InclDateRange(startIncl, endOfYear));
+            results.add(DateRange.ofInclusive(startIncl, endOfYear));
             startIncl = endOfYear.plusDays(1);
         }
 
-        // Last interval (preserve type)
+        // Last interval
         if (startIncl.isBefore(endIncl) || startIncl.equals(endIncl)) {
-            results.add(createDateRange(range, startIncl, endIncl));
+            results.add(DateRange.ofInclusive(startIncl, endIncl));
         }
 
         return results;
     }
 
-    private static DateRange createDateRange(DateRange original, LocalDate startIncl, LocalDate endIncl) {
-        if (original instanceof DateRange.InclDateRange) {
-            return new DateRange.InclDateRange(startIncl, endIncl);
-        } else if (original instanceof DateRange.StartExclDateRange) {
-            return new DateRange.StartExclDateRange(startIncl.minusDays(1), endIncl);
-        } else if (original instanceof DateRange.EndExclDateRange) {
-            return new DateRange.EndExclDateRange(startIncl, endIncl.plusDays(1));
-        } else if (original instanceof DateRange.ExclDateRange) {
-            return new DateRange.ExclDateRange(startIncl.minusDays(1), endIncl.plusDays(1));
-        }
-        throw new IllegalArgumentException("Unknown DateRange type: " + original);
-    }}
+}
