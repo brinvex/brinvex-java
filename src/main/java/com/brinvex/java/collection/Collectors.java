@@ -124,6 +124,17 @@ public class Collectors {
                 CH_ID);
     }
 
+    public static <T, K extends Enum<K>, U> Collector<T, ?, EnumMap<K, U>> toEnumMap(
+            Class<K> enumType,
+            Function<? super T, K> keyMapper,
+            Supplier<? extends U> valueMapper
+    ) {
+        return new CollectorImpl<>(() -> new EnumMap<>(enumType),
+                uniqKeysMapAccumulator(keyMapper, e -> valueMapper.get()),
+                uniqKeysMapMerger(),
+                CH_ID);
+    }
+
     public static <T> Collector<T, ?, Set<T>> toHashSet() {
         return new CollectorImpl<>(HashSet::new, Set::add,
                 (left, right) -> {
