@@ -5,13 +5,16 @@ import org.junit.jupiter.api.Test;
 import static com.brinvex.java.collection.CollectionUtil.toChunks;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Arrays;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 class CollectionChunkUtilTest {
 
     @Test
-    void testToChunksNormalCase() {
+    void toChunksNormalCase() {
         List<Integer> source = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
         int chunkSize = 3;
 
@@ -25,7 +28,7 @@ class CollectionChunkUtilTest {
     }
 
     @Test
-    void testToChunksSingleElement() {
+    void toChunksSingleElement() {
         List<Integer> source = List.of(1);
         int chunkSize = 1;
 
@@ -36,7 +39,7 @@ class CollectionChunkUtilTest {
     }
 
     @Test
-    void testToChunksEmptyList() {
+    void toChunksEmptyList() {
         List<Integer> source = List.of();
         int chunkSize = 3;
 
@@ -46,7 +49,7 @@ class CollectionChunkUtilTest {
     }
 
     @Test
-    void testToChunksChunkSizeGreaterThanListSize() {
+    void toChunksChunkSizeGreaterThanListSize() {
         List<Integer> source = Arrays.asList(1, 2);
         int chunkSize = 5;
 
@@ -57,7 +60,7 @@ class CollectionChunkUtilTest {
     }
 
     @Test
-    void testToChunksChunkSizeOne() {
+    void toChunksChunkSizeOne() {
         List<Integer> source = Arrays.asList(1, 2, 3, 4, 5);
         int chunkSize = 1;
 
@@ -72,7 +75,7 @@ class CollectionChunkUtilTest {
     }
 
     @Test
-    void testToChunksInvalidChunkSize() {
+    void toChunksInvalidChunkSize() {
         List<Integer> source = Arrays.asList(1, 2, 3);
 
         assertThrows(IllegalArgumentException.class, () -> {
@@ -85,9 +88,121 @@ class CollectionChunkUtilTest {
     }
 
     @Test
-    void testToChunksNullList() {
+    void toChunksNullList() {
         assertThrows(NullPointerException.class, () -> {
-            toChunks(null, 3); // Null list
+            toChunks((List<Object>) null, 3); // Null list
         });
     }
+
+    // ==============================
+    // Tests for toChunks(Iterable<T>, int)
+    // ==============================
+
+    @Test
+    void emptyIterable() {
+        Iterable<Integer> emptyIterable = Collections.emptyList();
+        List<List<Integer>> result = toChunks(emptyIterable, 3);
+        assertTrue(result.isEmpty(), "Expected no chunks for an empty iterable");
+    }
+
+    @Test
+    void singleChunkIterable() {
+        List<String> input = Arrays.asList("a", "b");
+        List<List<String>> result = toChunks(input, 5);
+        assertEquals(1, result.size(), "Expected a single chunk when chunk size exceeds input size");
+        assertEquals(Arrays.asList("a", "b"), result.get(0), "Chunk content did not match the expected values");
+    }
+
+    @Test
+    void multipleChunksExactDivisionIterable() {
+        List<Integer> input = Arrays.asList(1, 2, 3, 4);
+        List<List<Integer>> result = toChunks(input, 2);
+        assertEquals(2, result.size(), "Expected two chunks for exact division");
+        assertEquals(Arrays.asList(1, 2), result.get(0));
+        assertEquals(Arrays.asList(3, 4), result.get(1));
+    }
+
+    @Test
+    void multipleChunksWithRemainderIterable() {
+        List<Integer> input = Arrays.asList(1, 2, 3, 4, 5);
+        List<List<Integer>> result = toChunks(input, 2);
+        assertEquals(3, result.size(), "Expected three chunks when the last chunk is smaller");
+        assertEquals(Arrays.asList(1, 2), result.get(0));
+        assertEquals(Arrays.asList(3, 4), result.get(1));
+        assertEquals(Collections.singletonList(5), result.get(2));
+    }
+
+    @Test
+    void nullIterableSource() {
+        assertThrows(NullPointerException.class, () ->
+                        toChunks((Iterable<Object>) null, 3),
+                "Expected NullPointerException for null iterable source"
+        );
+    }
+
+    @Test
+    void illegalChunkSizeIterable() {
+        List<String> input = Arrays.asList("a", "b", "c");
+        assertThrows(IllegalArgumentException.class, () ->
+                        toChunks(input, 0),
+                "Expected IllegalArgumentException for non-positive chunk size"
+        );
+    }
+
+    // ==============================
+    // Tests for toChunks(Stream<T>, int)
+    // ==============================
+
+    @Test
+    void emptyStream() {
+        Stream<Integer> emptyStream = Stream.empty();
+        List<List<Integer>> result = toChunks(emptyStream, 3);
+        assertTrue(result.isEmpty(), "Expected no chunks for an empty stream");
+    }
+
+    @Test
+    void singleChunkStream() {
+        Stream<String> inputStream = Stream.of("a", "b");
+        List<List<String>> result = toChunks(inputStream, 5);
+        assertEquals(1, result.size(), "Expected a single chunk when chunk size exceeds stream size");
+        assertEquals(Arrays.asList("a", "b"), result.get(0), "Chunk content did not match the expected values");
+    }
+
+    @Test
+    void multipleChunksExactDivisionStream() {
+        Stream<Integer> inputStream = IntStream.rangeClosed(1, 4).boxed();
+        List<List<Integer>> result = toChunks(inputStream, 2);
+        assertEquals(2, result.size(), "Expected two chunks for exact division");
+        assertEquals(Arrays.asList(1, 2), result.get(0));
+        assertEquals(Arrays.asList(3, 4), result.get(1));
+    }
+
+    @Test
+    void multipleChunksWithRemainderStream() {
+        Stream<Integer> inputStream = IntStream.rangeClosed(1, 5).boxed();
+        List<List<Integer>> result = toChunks(inputStream, 2);
+        assertEquals(3, result.size(), "Expected three chunks when the last chunk is smaller");
+        assertEquals(Arrays.asList(1, 2), result.get(0));
+        assertEquals(Arrays.asList(3, 4), result.get(1));
+        assertEquals(Collections.singletonList(5), result.get(2));
+    }
+
+    @SuppressWarnings("DataFlowIssue")
+    @Test
+    void nullStreamSource() {
+        assertThrows(NullPointerException.class, () ->
+                        toChunks((Stream<Object>) null, 3),
+                "Expected NullPointerException for null stream source"
+        );
+    }
+
+    @Test
+    void illegalChunkSizeStream() {
+        Stream<String> inputStream = Stream.of("a", "b", "c");
+        assertThrows(IllegalArgumentException.class, () ->
+                        toChunks(inputStream, 0),
+                "Expected IllegalArgumentException for non-positive chunk size"
+        );
+    }
+
 }
