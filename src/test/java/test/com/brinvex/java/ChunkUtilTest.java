@@ -2,7 +2,7 @@ package test.com.brinvex.java;
 
 import org.junit.jupiter.api.Test;
 
-import static com.brinvex.java.collection.CollectionUtil.toChunks;
+import static com.brinvex.java.ChunkUtil.toChunks;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Collections;
@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-class CollectionChunkUtilTest {
+class ChunkUtilTest {
 
     @Test
     void toChunksNormalCase() {
