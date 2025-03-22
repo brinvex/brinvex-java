@@ -40,11 +40,11 @@ public class TimeMeasureUtil {
         }
     }
 
-    public static <T> TimeMeasureResult<T> measureThrowing(Callable<T> task) throws TimeMeasureException {
+    public static <T, E extends Exception> TimeMeasureResult<T> measureThrowing(ThrowingSupplier<T, E> task) throws TimeMeasureException {
         Instant start = Instant.now();
         T result;
         try {
-            result = task.call();
+            result = task.get();
             Instant end = Instant.now();
             return new TimeMeasureResult<>(result, Duration.between(start, end));
         } catch (Exception e) {
@@ -53,7 +53,7 @@ public class TimeMeasureUtil {
         }
     }
 
-    public static Duration measureThrowing(ThrowingRunnable task) throws TimeMeasureException {
+    public static <E extends Exception> Duration measureThrowing(ThrowingRunnable<E> task) throws TimeMeasureException {
         Instant start = Instant.now();
         try {
             task.run();
