@@ -10,19 +10,19 @@ public final class DateRange {
     private LocalDate endIncl;
     private final LocalDate endExcl;
 
-    public static DateRange ofInclusive(LocalDate startIncl, LocalDate endIncl) {
+    public static DateRange dateRangeIncl(LocalDate startIncl, LocalDate endIncl) {
         return new DateRange(startIncl, endIncl == null ? null : endIncl.plusDays(1));
     }
 
-    public static DateRange ofStartExclusive(LocalDate startExcl, LocalDate endIncl) {
+    public static DateRange dateRangeStartExcl(LocalDate startExcl, LocalDate endIncl) {
         return new DateRange(startExcl == null ? null : startExcl.plusDays(1), endIncl == null ? null : endIncl.plusDays(1));
     }
 
-    public static DateRange ofEndExclusive(LocalDate startIncl, LocalDate endExcl) {
+    public static DateRange dateRangeEndExcl(LocalDate startIncl, LocalDate endExcl) {
         return new DateRange(startIncl, endExcl);
     }
 
-    public static DateRange ofExclusive(LocalDate startExcl, LocalDate endExcl) {
+    public static DateRange dateRangeExcl(LocalDate startExcl, LocalDate endExcl) {
         return new DateRange(startExcl == null ? null : startExcl.plusDays(1), endExcl);
     }
 

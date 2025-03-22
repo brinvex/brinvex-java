@@ -166,19 +166,19 @@ public class DateUtil {
             results.add(range);
             return results;
         }
-        results.add(DateRange.ofInclusive(startIncl, endOfFirstYear));
+        results.add(DateRange.dateRangeIncl(startIncl, endOfFirstYear));
         startIncl = endOfFirstYear.plusDays(1);
 
         // Middle intervals (fully inclusive)
         while (startIncl.plusYears(1).minusDays(1).isBefore(endIncl)) {
             LocalDate endOfYear = startIncl.plusYears(1).minusDays(1);
-            results.add(DateRange.ofInclusive(startIncl, endOfYear));
+            results.add(DateRange.dateRangeIncl(startIncl, endOfYear));
             startIncl = endOfYear.plusDays(1);
         }
 
         // Last interval
         if (startIncl.isBefore(endIncl) || startIncl.equals(endIncl)) {
-            results.add(DateRange.ofInclusive(startIncl, endIncl));
+            results.add(DateRange.dateRangeIncl(startIncl, endIncl));
         }
 
         return results;
