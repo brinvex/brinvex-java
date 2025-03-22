@@ -5,7 +5,7 @@ _Brinvex Java_ is a micro-library containing various helper utilities for Java.
 ### Maven and JPMS Setup
 ````
 <properties>
-    <brinvex-java.version>1.8.0</brinvex-java.version>
+    <brinvex-java.version>1.9.0</brinvex-java.version>
 </properties>    
 
 <repository>
