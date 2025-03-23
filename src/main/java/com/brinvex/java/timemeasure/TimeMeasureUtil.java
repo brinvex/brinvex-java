@@ -1,44 +1,13 @@
-package com.brinvex.java;
+package com.brinvex.java.timemeasure;
+
+import com.brinvex.java.ThrowingRunnable;
+import com.brinvex.java.ThrowingSupplier;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.concurrent.Callable;
 import java.util.function.Supplier;
 
 public class TimeMeasureUtil {
-
-    public record TimeMeasureResult<T>(T result, Duration duration) {
-        @Override
-        public String toString() {
-            return "T[ms]:" + duration.toMillis() + "/R:" + result;
-        }
-    }
-
-    public static class TimeMeasureException extends Exception {
-        private final Duration duration;
-
-        public TimeMeasureException(Throwable cause, Duration duration) {
-            super("Execution failed after " + duration.toMillis() + " ms: " + cause, cause);
-            this.duration = duration;
-        }
-
-        public Duration duration() {
-            return duration;
-        }
-    }
-
-    public static class TimeMeasureRuntimeException extends RuntimeException {
-        private final Duration duration;
-
-        public TimeMeasureRuntimeException(Throwable cause, Duration duration) {
-            super("Execution failed after " + duration.toMillis() + " ms: " + cause, cause);
-            this.duration = duration;
-        }
-
-        public Duration duration() {
-            return duration;
-        }
-    }
 
     public static <T, E extends Exception> TimeMeasureResult<T> measureThrowing(ThrowingSupplier<T, E> task) throws TimeMeasureException {
         Instant start = Instant.now();

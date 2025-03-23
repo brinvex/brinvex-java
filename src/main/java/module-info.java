@@ -5,4 +5,5 @@ module com.brinvex.java {
     exports com.brinvex.java.net;
     exports com.brinvex.java.validation;
     exports com.brinvex.java.venndiagram;
+    exports com.brinvex.java.timemeasure;
 }

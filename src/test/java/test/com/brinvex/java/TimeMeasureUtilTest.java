@@ -1,6 +1,8 @@
 package test.com.brinvex.java;
 
-import com.brinvex.java.TimeMeasureUtil;
+import com.brinvex.java.timemeasure.TimeMeasureException;
+import com.brinvex.java.timemeasure.TimeMeasureResult;
+import com.brinvex.java.timemeasure.TimeMeasureUtil;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -11,14 +13,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class TimeMeasureUtilTest {
 
     @Test
-    void measureThrowingRunnable() throws TimeMeasureUtil.TimeMeasureException {
+    void measureThrowingRunnable() throws TimeMeasureException {
         Duration dur = TimeMeasureUtil.measureThrowing(() -> Thread.sleep(500));
         assertTrue(dur.toMillis() >= 500, dur.toString());
     }
 
     @Test
-    void measureThrowingCallable() throws TimeMeasureUtil.TimeMeasureException {
-        TimeMeasureUtil.TimeMeasureResult<String> timeMeasureResult = TimeMeasureUtil.measureThrowing(() -> {
+    void measureThrowingCallable() throws TimeMeasureException {
+        TimeMeasureResult<String> timeMeasureResult = TimeMeasureUtil.measureThrowing(() -> {
             Thread.sleep(500);
             return "ok";
         });
@@ -40,7 +42,7 @@ public class TimeMeasureUtilTest {
 
     @Test
     void measureCallable() {
-        TimeMeasureUtil.TimeMeasureResult<String> timeMeasureResult = TimeMeasureUtil.measure(() -> {
+        TimeMeasureResult<String> timeMeasureResult = TimeMeasureUtil.measure(() -> {
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
