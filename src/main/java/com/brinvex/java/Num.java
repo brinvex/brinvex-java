@@ -296,4 +296,14 @@ public class Num {
         return d1.multiply(d2, MATH_CTX_P16_HALF_UP);
     }
 
+    /**
+     * See also {@link Math#toIntExact(long)}
+     */
+    public static short toShortExact(long value) {
+        short shortValue = (short) value;
+        if (shortValue != value) {
+            throw new ArithmeticException("short overflow");
+        }
+        return shortValue;
+    }
 }

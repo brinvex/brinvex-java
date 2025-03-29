@@ -55,8 +55,25 @@ public final class DateRange {
         return endExcl;
     }
 
-    public boolean contains(LocalDate date) {
-        return !date.isBefore(startIncl) && date.isBefore(endExcl);
+    /**
+     * Checks if the date range encompasses the given date.
+     *
+     * @param date the date to check
+     * @return true if the date is within this date range, false otherwise
+     */
+    public boolean encompasses(LocalDate date) {
+        return !date.isBefore(startIncl()) && date.isBefore(endExcl());
+    }
+
+    /**
+     * Checks if the date range fully encompasses the specified other date range.
+     *
+     * @param otherRange the date range to check against
+     * @return true if this date range fully contains the other date range, false otherwise
+     */
+    public boolean encompasses(DateRange otherRange) {
+        return !this.startIncl().isAfter(otherRange.startIncl()) &&
+               !this.endExcl().isBefore(otherRange.endExcl());
     }
 
     @Override
