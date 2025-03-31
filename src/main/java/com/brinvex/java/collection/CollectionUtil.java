@@ -3,6 +3,7 @@ package com.brinvex.java.collection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -116,6 +117,64 @@ public class CollectionUtil {
     ) {
         TreeMap<K, V> map = new TreeMap<>();
         map.put(key1, value1);
+        return map;
+    }
+
+    public static <EK extends Enum<EK>, V> EnumMap<EK, V> enumMap(
+            EK key1,
+            V value1
+    ) {
+        Class<EK> enumType = key1.getDeclaringClass();
+        EnumMap<EK, V> map = new EnumMap<>(enumType);
+        map.put(key1, value1);
+        return map;
+    }
+
+    public static <EK extends Enum<EK>, V> EnumMap<EK, V> enumMap(
+            EK key1,
+            V value1,
+            EK key2,
+            V value2
+    ) {
+        Class<EK> enumType = key1.getDeclaringClass();
+        EnumMap<EK, V> map = new EnumMap<>(enumType);
+        map.put(key1, value1);
+        map.put(key2, value2);
+        return map;
+    }
+
+    public static <EK extends Enum<EK>, V> EnumMap<EK, V> enumMap(
+            EK key1,
+            V value1,
+            EK key2,
+            V value2,
+            EK key3,
+            V value3
+    ) {
+        Class<EK> enumType = key1.getDeclaringClass();
+        EnumMap<EK, V> map = new EnumMap<>(enumType);
+        map.put(key1, value1);
+        map.put(key2, value2);
+        map.put(key3, value3);
+        return map;
+    }
+
+    public static <EK extends Enum<EK>, V> EnumMap<EK, V> enumMap(
+            EK key1,
+            V value1,
+            EK key2,
+            V value2,
+            EK key3,
+            V value3,
+            EK key4,
+            V value4
+    ) {
+        Class<EK> enumType = key1.getDeclaringClass();
+        EnumMap<EK, V> map = new EnumMap<>(enumType);
+        map.put(key1, value1);
+        map.put(key2, value2);
+        map.put(key3, value3);
+        map.put(key4, value4);
         return map;
     }
 
