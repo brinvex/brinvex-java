@@ -2,7 +2,7 @@ package com.brinvex.java;
 
 import java.util.Iterator;
 
-public class IterableUtils {
+public class IterableUtil {
 
     public static <T> void forEachPair(Iterable<T> iterable, PairConsumer<T> consumer) {
         if (iterable == null) return;
