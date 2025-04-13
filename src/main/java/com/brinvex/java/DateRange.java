@@ -82,7 +82,7 @@ public final class DateRange {
     }
 
     public IntStream asEpochDaysStream() {
-        return endExclEpochDaysStream(startExcl, endExcl);
+        return endExclEpochDaysStream(startIncl, endExcl);
     }
 
     @Override
