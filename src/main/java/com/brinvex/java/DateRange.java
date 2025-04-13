@@ -2,6 +2,7 @@ package com.brinvex.java;
 
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.stream.IntStream;
 
 public final class DateRange {
 
@@ -74,6 +75,14 @@ public final class DateRange {
     public boolean encompasses(DateRange otherRange) {
         return !this.startIncl().isAfter(otherRange.startIncl()) &&
                !this.endExcl().isBefore(otherRange.endExcl());
+    }
+
+    public static IntStream endExclEpochDaysStream(LocalDate startIncl, LocalDate endExcl) {
+        return IntStream.range((int) startIncl.toEpochDay(), (int) endExcl.toEpochDay());
+    }
+
+    public IntStream asEpochDaysStream() {
+        return endExclEpochDaysStream(startExcl, endExcl);
     }
 
     @Override
