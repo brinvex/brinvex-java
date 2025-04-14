@@ -211,6 +211,16 @@ public class CollectionUtil {
         };
     }
 
+    public static <E> E getFirstThrowIfMore(List<E> collection) {
+        int size = collection.size();
+        return switch (size) {
+            case 0 -> null;
+            case 1 -> collection.get(0);
+            default -> throw new IllegalStateException(
+                    format("Expecting empty or one-element collection but got #%s, %s", size, collection));
+        };
+    }
+
     public static <E> E getFirstThrowIfNoneOrMore(Collection<E> collection) {
         int size = collection.size();
         if (size == 1) {
