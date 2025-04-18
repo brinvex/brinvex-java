@@ -1,6 +1,8 @@
 package com.brinvex.java;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.IntStream;
 
@@ -83,6 +85,82 @@ public final class DateRange {
 
     public IntStream asEpochDaysStream() {
         return endExclEpochDaysStream(startIncl, endExcl);
+    }
+
+    /**
+     * Subtracts the given {@code other} DateRange from this DateRange and returns the resulting non-overlapping part(s).
+     * <p>
+     * The result can be:
+     * <ul>
+     *     <li>Empty – if {@code other} fully covers this range.</li>
+     *     <li>One DateRange – if {@code other} partially overlaps with the start or end.</li>
+     *     <li>Two DateRanges – if {@code other} is strictly inside this range.</li>
+     *     <li>Original DateRange – if there's no overlap at all.</li>
+     * </ul>
+     *
+     * <p>Examples:</p>
+     *
+     * <table>
+     *     <tr>
+     *         <th>this</th>
+     *         <th>other</th>
+     *         <th>Result</th>
+     *     </tr>
+     *     <tr>
+     *         <td>[2025-03-10, 2025-03-20)</td>
+     *         <td>[2025-03-12, 2025-03-18)</td>
+     *         <td>[2025-03-10, 2025-03-12), [2025-03-18, 2025-03-20)</td>
+     *     </tr>
+     *     <tr>
+     *         <td>[2025-03-10, 2025-03-20)</td>
+     *         <td>[2025-03-05, 2025-03-15)</td>
+     *         <td>[2025-03-15, 2025-03-20)</td>
+     *     </tr>
+     *     <tr>
+     *         <td>[2025-03-10, 2025-03-20)</td>
+     *         <td>[2025-03-15, 2025-03-25)</td>
+     *         <td>[2025-03-10, 2025-03-15)</td>
+     *     </tr>
+     *     <tr>
+     *         <td>[2025-03-10, 2025-03-20)</td>
+     *         <td>[2025-03-05, 2025-03-25)</td>
+     *         <td>(empty)</td>
+     *     </tr>
+     *     <tr>
+     *         <td>[2025-03-10, 2025-03-20)</td>
+     *         <td>[2025-03-20, 2025-03-25)</td>
+     *         <td>[2025-03-10, 2025-03-20)</td>
+     *     </tr>
+     * </table>
+     *
+     * @param other the {@code DateRange} to subtract from this range
+     * @return a list of {@code DateRange} objects representing the difference
+     */
+    public List<DateRange> subtract(DateRange other) {
+        if (other.startIncl().equals(other.endExcl())) {
+            // Zero-length range, no subtraction needed
+            return List.of(this);
+        }
+
+        List<DateRange> result = new ArrayList<>(2);
+
+        // No overlap
+        if (other.endExcl().isBefore(this.startIncl()) || other.startIncl().isAfter(this.endExcl())) {
+            result.add(this);
+            return result;
+        }
+
+        // Overlap at the beginning
+        if (other.startIncl().isAfter(this.startIncl())) {
+            result.add(new DateRange(this.startIncl(), other.startIncl()));
+        }
+
+        // Overlap at the end
+        if (other.endExcl().isBefore(this.endExcl())) {
+            result.add(new DateRange(other.endExcl(), this.endExcl()));
+        }
+
+        return result;
     }
 
     @Override
