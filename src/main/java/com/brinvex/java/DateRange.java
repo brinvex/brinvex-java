@@ -202,7 +202,7 @@ public final class DateRange {
     /**
      * See {@link DateRange#intersect(DateRange)}
      */
-    private DateRange intersect(LocalDate otherStartIncl, LocalDate otherEndExcl) {
+    public DateRange intersect(LocalDate otherStartIncl, LocalDate otherEndExcl) {
         LocalDate maxStartIncl = startIncl.isAfter(otherStartIncl) ? startIncl : otherStartIncl;
         LocalDate minEndExcl = endExcl.isBefore(otherEndExcl) ? endExcl : otherEndExcl;
 
