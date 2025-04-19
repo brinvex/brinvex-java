@@ -30,6 +30,46 @@ public final class DateRange {
     }
 
     /**
+     * Parses the given ISO‑8601 date strings and returns an inclusive DateRange.
+     */
+    public static DateRange dateRangeIncl(String startIncl, String endIncl) {
+        return dateRangeIncl(
+                startIncl == null ? null : LocalDate.parse(startIncl),
+                endIncl == null ? null : LocalDate.parse(endIncl)
+        );
+    }
+
+    /**
+     * Parses the given ISO‑8601 date strings and returns a DateRange with exclusive start.
+     */
+    public static DateRange dateRangeStartExcl(String startExcl, String endIncl) {
+        return dateRangeStartExcl(
+                startExcl == null ? null : LocalDate.parse(startExcl),
+                endIncl == null ? null : LocalDate.parse(endIncl)
+        );
+    }
+
+    /**
+     * Parses the given ISO‑8601 date strings and returns a DateRange with exclusive end.
+     */
+    public static DateRange dateRangeEndExcl(String startIncl, String endExcl) {
+        return dateRangeEndExcl(
+                startIncl == null ? null : LocalDate.parse(startIncl),
+                endExcl == null ? null : LocalDate.parse(endExcl)
+        );
+    }
+
+    /**
+     * Parses the given ISO‑8601 date strings and returns a fully exclusive DateRange.
+     */
+    public static DateRange dateRangeExcl(String startExcl, String endExcl) {
+        return dateRangeExcl(
+                startExcl == null ? null : LocalDate.parse(startExcl),
+                endExcl == null ? null : LocalDate.parse(endExcl)
+        );
+    }
+
+    /**
      * <br> [2025-03-17, 2025-03-18) OK
      * <br> [2025-03-17, 2025-03-17) OK zero-length date range
      * <br> [2025-03-17, 2025-03-16) Illegal
@@ -98,40 +138,14 @@ public final class DateRange {
      *     <li>Original DateRange – if there's no overlap at all.</li>
      * </ul>
      *
-     * <p>Examples:</p>
-     *
-     * <table>
-     *     <tr>
-     *         <th>this</th>
-     *         <th>other</th>
-     *         <th>Result</th>
-     *     </tr>
-     *     <tr>
-     *         <td>[2025-03-10, 2025-03-20)</td>
-     *         <td>[2025-03-12, 2025-03-18)</td>
-     *         <td>[2025-03-10, 2025-03-12), [2025-03-18, 2025-03-20)</td>
-     *     </tr>
-     *     <tr>
-     *         <td>[2025-03-10, 2025-03-20)</td>
-     *         <td>[2025-03-05, 2025-03-15)</td>
-     *         <td>[2025-03-15, 2025-03-20)</td>
-     *     </tr>
-     *     <tr>
-     *         <td>[2025-03-10, 2025-03-20)</td>
-     *         <td>[2025-03-15, 2025-03-25)</td>
-     *         <td>[2025-03-10, 2025-03-15)</td>
-     *     </tr>
-     *     <tr>
-     *         <td>[2025-03-10, 2025-03-20)</td>
-     *         <td>[2025-03-05, 2025-03-25)</td>
-     *         <td>(empty)</td>
-     *     </tr>
-     *     <tr>
-     *         <td>[2025-03-10, 2025-03-20)</td>
-     *         <td>[2025-03-20, 2025-03-25)</td>
-     *         <td>[2025-03-10, 2025-03-20)</td>
-     *     </tr>
-     * </table>
+     * Examples:
+     * <pre>
+     * [2025-03-10, 2025-03-20) - [2025-03-12, 2025-03-18) = [2025-03-10, 2025-03-12), [2025-03-18, 2025-03-20)
+     * [2025-03-10, 2025-03-20) - [2025-03-05, 2025-03-15) = [2025-03-15, 2025-03-20)
+     * [2025-03-10, 2025-03-20) - [2025-03-15, 2025-03-25) = [2025-03-10, 2025-03-15)
+     * [2025-03-10, 2025-03-20) - [2025-03-05, 2025-03-25) = (empty)
+     * [2025-03-10, 2025-03-20) - [2025-03-20, 2025-03-25) = [2025-03-10, 2025-03-20)
+     * </pre>
      *
      * @param other the {@code DateRange} to subtract from this range
      * @return a list of {@code DateRange} objects representing the difference
@@ -161,6 +175,34 @@ public final class DateRange {
         }
 
         return result;
+    }
+
+    /**
+     * Returns the intersection (overlapping portion) of this DateRange with the given {@code other} DateRange.
+     * <p>
+     * If there is no overlap, {@code null} is returned.
+     * <p>
+     * Examples:
+     * <pre>
+     * [2025-03-10, 2025-03-20) ∩ [2025-03-15, 2025-03-25) = [2025-03-15, 2025-03-20)
+     * [2025-03-10, 2025-03-20) ∩ [2025-03-01, 2025-03-15) = [2025-03-10, 2025-03-15)
+     * [2025-03-10, 2025-03-20) ∩ [2025-03-10, 2025-03-20) = [2025-03-10, 2025-03-20)
+     * [2025-03-10, 2025-03-20) ∩ [2025-03-20, 2025-03-25) = null
+     * </pre>
+     *
+     * @param other the other {@code DateRange} to intersect with
+     * @return a {@code DateRange} representing the intersection, or {@code null} if there's no overlap
+     */
+    public DateRange intersect(DateRange other) {
+        LocalDate maxStartIncl = startIncl.isAfter(other.startIncl()) ? startIncl : other.startIncl();
+        LocalDate minEndExcl = endExcl.isBefore(other.endExcl()) ? endExcl : other.endExcl();
+
+        // If no actual overlap
+        if (!maxStartIncl.isBefore(minEndExcl)) {
+            return null;
+        }
+
+        return new DateRange(maxStartIncl, minEndExcl);
     }
 
     @Override
