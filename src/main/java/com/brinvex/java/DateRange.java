@@ -194,8 +194,17 @@ public final class DateRange {
      * @return a {@code DateRange} representing the intersection, or {@code null} if there's no overlap
      */
     public DateRange intersect(DateRange other) {
-        LocalDate maxStartIncl = startIncl.isAfter(other.startIncl()) ? startIncl : other.startIncl();
-        LocalDate minEndExcl = endExcl.isBefore(other.endExcl()) ? endExcl : other.endExcl();
+        LocalDate otherStartIncl = other.startIncl();
+        LocalDate otherEndExcl = other.endExcl();
+        return intersect(otherStartIncl, otherEndExcl);
+    }
+
+    /**
+     * See {@link DateRange#intersect(DateRange)}
+     */
+    private DateRange intersect(LocalDate otherStartIncl, LocalDate otherEndExcl) {
+        LocalDate maxStartIncl = startIncl.isAfter(otherStartIncl) ? startIncl : otherStartIncl;
+        LocalDate minEndExcl = endExcl.isBefore(otherEndExcl) ? endExcl : otherEndExcl;
 
         // If no actual overlap
         if (!maxStartIncl.isBefore(minEndExcl)) {
