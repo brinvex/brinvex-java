@@ -18,7 +18,6 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
@@ -362,7 +361,7 @@ public class CollectionUtil {
             } else {
                 return emptySortedMap();
             }
-        } else  {
+        } else {
             return emptySortedMap();
         }
     }
@@ -392,7 +391,7 @@ public class CollectionUtil {
             return map;
         } else if (fromKeyIncl.compareTo(oldLastKey) <= 0) {
             return map.tailMap(fromKeyIncl);
-        } else  {
+        } else {
             return emptySortedMap();
         }
     }
@@ -419,44 +418,9 @@ public class CollectionUtil {
             } else {
                 return emptyNavigableMap();
             }
-        } else  {
+        } else {
             return emptyNavigableMap();
         }
-    }
-
-    /**
-     * Performs a binary search over a list of items using a projection function that maps items to comparable keys.
-     *
-     * @param l            the list to search (must be sorted by the key extracted with comparingBy)
-     * @param key          the key to search for
-     * @param comparingBy  function extracting a Comparable property from items
-     * @param <T>          the type of list elements
-     * @param <P>          the type of the property used for comparison (must be Comparable)
-     * @return index of the key, or (-(insertion point) - 1) if not found
-     * <p>
-     * This method runs in log(n) time for a "random access" list.
-     * See also ${{@link java.util.Collections#binarySearch(List, Object, Comparator)}
-     */
-    public static <T, P extends Comparable<? super P>> int binarySearch(
-            List<? extends T> l, P key, Function<? super T, P> comparingBy) {
-
-        int low = 0;
-        int high = l.size() - 1;
-
-        while (low <= high) {
-            int mid = (low + high) >>> 1;
-            T midVal = l.get(mid);
-            P midProp = comparingBy.apply(midVal);
-            int cmp = midProp.compareTo(key);
-
-            if (cmp < 0)
-                low = mid + 1;
-            else if (cmp > 0)
-                high = mid - 1;
-            else
-                return mid; // key found
-        }
-        return -(low + 1);  // key not found
     }
 
 }

@@ -7,8 +7,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.brinvex.java.collection.CollectionUtil.binarySearch;
-import static org.junit.jupiter.api.Assertions.*;
+import static com.brinvex.java.collection.SortedListUtil.binarySearch;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class BinarySearchTest {
 
