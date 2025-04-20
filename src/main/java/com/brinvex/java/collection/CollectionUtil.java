@@ -201,6 +201,10 @@ public class CollectionUtil {
         return collection == null ? null : collection instanceof List<?> ? (List<E>) collection : new ArrayList<>(collection);
     }
 
+    public static <E> ArrayList<E> asArrayList(Collection<E> collection) {
+        return collection == null ? null : collection instanceof ArrayList<?> ? (ArrayList<E>) collection : new ArrayList<>(collection);
+    }
+
     public static <E> E getFirstThrowIfMore(Collection<E> collection) {
         int size = collection.size();
         return switch (size) {
