@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.IntStream;
 
+import static com.brinvex.java.DateUtil.maxDate;
+import static com.brinvex.java.DateUtil.minDate;
+
 public final class DateRange {
 
     private LocalDate startExcl;
@@ -175,6 +178,28 @@ public final class DateRange {
         }
 
         return result;
+    }
+
+    /**
+     * Returns the smallest {@code DateRange} that fully covers both this range and the given {@code other} range.
+     * <p>
+     * If one range encompasses the other, that range is returned.
+     *
+     * <p>Examples:</p>
+     * <pre>
+     * [2025-03-10, 2025-03-20) ∪ [2025-03-15, 2025-03-25) = [2025-03-10, 2025-03-25)
+     * [2025-03-10, 2025-03-20) ∪ [2025-03-01, 2025-03-05) = [2025-03-01, 2025-03-20)
+     * [2025-03-10, 2025-03-20) ∪ [2025-03-10, 2025-03-20) = [2025-03-10, 2025-03-20)
+     * </pre>
+     *
+     * @param other the other {@code DateRange} to combine with this range
+     * @return a new {@code DateRange} representing the union of the two
+     */
+    public DateRange span(DateRange other) {
+        return encompasses(other) ? this : new DateRange(
+                minDate(startIncl, other.startIncl),
+                maxDate(endExcl, other.endExcl)
+        );
     }
 
     /**
