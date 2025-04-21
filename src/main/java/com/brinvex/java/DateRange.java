@@ -202,6 +202,13 @@ public final class DateRange {
         );
     }
 
+    public DateRange span(LocalDate otherDateIncl) {
+        return encompasses(otherDateIncl) ? this : new DateRange(
+                minDate(startIncl, otherDateIncl),
+                maxDate(endExcl, otherDateIncl.plusDays(1))
+        );
+    }
+
     /**
      * Returns the intersection (overlapping portion) of this DateRange with the given {@code other} DateRange.
      * <p>
