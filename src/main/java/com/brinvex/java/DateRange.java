@@ -209,14 +209,14 @@ public final class DateRange {
         );
     }
 
-    public DateRange spanIfRight(LocalDate rightDateIncl) {
+    public DateRange spanRight(LocalDate rightDateIncl) {
         return rightDateIncl.isBefore(endExcl) ? this : new DateRange(
                 startIncl,
                 maxDate(endExcl, rightDateIncl.plusDays(1))
         );
     }
 
-    public DateRange spanIfLeft(LocalDate leftDateIncl) {
+    public DateRange spanLeft(LocalDate leftDateIncl) {
         return !leftDateIncl.isBefore(startIncl) ? this : new DateRange(
                 minDate(startIncl, leftDateIncl),
                 endExcl
