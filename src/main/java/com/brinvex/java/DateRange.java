@@ -183,7 +183,7 @@ public final class DateRange {
     /**
      * Returns the smallest {@code DateRange} that fully covers both this range and the given {@code other} range.
      * <p>
-     * If one range encompasses the other, that range is returned.
+     * If this range encompasses the other, then this range is returned.
      *
      * <p>Examples:</p>
      * <pre>
@@ -193,7 +193,7 @@ public final class DateRange {
      * </pre>
      *
      * @param other the other {@code DateRange} to combine with this range
-     * @return a new {@code DateRange} representing the union of the two
+     * @return a {@code DateRange} representing the union of the two
      */
     public DateRange span(DateRange other) {
         return encompasses(other) ? this : new DateRange(
@@ -206,6 +206,20 @@ public final class DateRange {
         return encompasses(otherDateIncl) ? this : new DateRange(
                 minDate(startIncl, otherDateIncl),
                 maxDate(endExcl, otherDateIncl.plusDays(1))
+        );
+    }
+
+    public DateRange spanIfRight(LocalDate rightDateIncl) {
+        return rightDateIncl.isBefore(endExcl) ? this : new DateRange(
+                startIncl,
+                maxDate(endExcl, rightDateIncl.plusDays(1))
+        );
+    }
+
+    public DateRange spanIfLeft(LocalDate leftDateIncl) {
+        return !leftDateIncl.isBefore(startIncl) ? this : new DateRange(
+                minDate(startIncl, leftDateIncl),
+                endExcl
         );
     }
 
