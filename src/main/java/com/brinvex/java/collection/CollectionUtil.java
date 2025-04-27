@@ -289,6 +289,12 @@ public class CollectionUtil {
         return result;
     }
 
+    public static <E> HashSet<E> joinToHashSet(Collection<E> cole1, Collection<E> cole2) {
+        HashSet<E> result = new HashSet<>(cole1);
+        result.addAll(cole2);
+        return result;
+    }
+
     public static <E> LinkedHashSet<E> joinToLinkedSet(Collection<E> cole1, Collection<E> cole2) {
         LinkedHashSet<E> result = new LinkedHashSet<>(cole1);
         result.addAll(cole2);
