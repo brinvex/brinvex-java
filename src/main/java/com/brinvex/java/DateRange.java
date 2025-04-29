@@ -260,6 +260,30 @@ public final class DateRange {
         return new DateRange(maxStartIncl, minEndExcl);
     }
 
+    /**
+     * Returns a new DateRange by extending this range toward the other disjoint range's nearest boundary.
+     * <ul>
+     *   <li>[1,4) extend [6,8) → [1,6): preserves this.startIncl, extends end to other.startIncl()</li>
+     *   <li>[6,8) extend [1,4) → [4,8): preserves this.endExcl, extends start back to other.endExcl()</li>
+     * </ul>
+     * If the two ranges overlap or are adjacent, returns null (no gap to extend).
+     *
+     * @param other the DateRange to extend toward (must be disjoint)
+     * @return a new DateRange spanning the gap toward the other, or null if no disjoint gap
+     */
+    public DateRange extendTo(DateRange other) {
+        // Forward extension: this ends before other starts
+        if (this.endExcl().isBefore(other.startIncl())) {
+            return new DateRange(this.startIncl(), other.startIncl());
+        }
+        // Backward extension: other ends before this starts
+        if (other.endExcl().isBefore(this.startIncl())) {
+            return new DateRange(other.endExcl(), this.endExcl());
+        }
+        // Overlapping or adjacent: no gap to extend
+        return null;
+    }
+
     @Override
     public String toString() {
         return "DateRange{[" + startIncl + "-" + endExcl + ")}";
