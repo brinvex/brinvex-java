@@ -284,6 +284,14 @@ public final class DateRange {
         return null;
     }
 
+    public DateRange shiftRight(int days) {
+        return days == 0 ? this : new DateRange(this.startIncl().plusDays(days), this.endExcl().plusDays(days));
+    }
+
+    public DateRange shiftLeft(int days) {
+        return shiftRight(-days);
+    }
+
     @Override
     public String toString() {
         return "DateRange{[" + startIncl + "-" + endExcl + ")}";
