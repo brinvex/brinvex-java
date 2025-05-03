@@ -285,12 +285,42 @@ public final class DateRange {
         return null;
     }
 
+    /**
+     * Returns a new DateRange that includes the specified inclusive date.
+     * <p>
+     * If the given date is before the current start date, the range is extended backwards.
+     * If it is after the current inclusive end date, the range is extended forward.
+     * If the date is already within the range, {@code null} is returned.
+     *
+     * @param dateIncl the date to include in the range (inclusive)
+     * @return a new extended DateRange or {@code null} if the date is already included
+     */
     public DateRange extendToIncl(LocalDate dateIncl) {
         if (dateIncl.isBefore(this.startIncl())) {
             return new DateRange(dateIncl, this.endExcl());
         }
         if (dateIncl.isAfter(this.endIncl())) {
             return new DateRange(this.startIncl(), dateIncl.plusDays(1));
+        }
+        return null;
+    }
+
+    /**
+     * Returns a new DateRange that extends to (but does not include) the specified exclusive date.
+     * <p>
+     * If the given date is before the current start date, the range is extended backwards (by shifting start date).
+     * If it is after the current exclusive end date, the range is extended forward.
+     * If the date is already within or touching the current range, {@code null} is returned.
+     *
+     * @param dateExcl the exclusive end date to extend the range to
+     * @return a new extended DateRange or {@code null} if the date is already within or adjacent to the range
+     */
+    public DateRange extendToExcl(LocalDate dateExcl) {
+        if (dateExcl.isBefore(this.startExcl())) {
+            return new DateRange(dateExcl.plusDays(1), this.endExcl());
+        }
+        if (dateExcl.isAfter(this.endExcl())) {
+            return new DateRange(this.startIncl(), dateExcl);
         }
         return null;
     }
