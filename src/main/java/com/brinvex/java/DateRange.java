@@ -1,6 +1,7 @@
 package com.brinvex.java;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -290,6 +291,10 @@ public final class DateRange {
 
     public DateRange shiftLeft(int days) {
         return shiftRight(-days);
+    }
+
+    public int length() {
+        return (int) this.startIncl().until(this.endExcl(), ChronoUnit.DAYS);
     }
 
     @Override
