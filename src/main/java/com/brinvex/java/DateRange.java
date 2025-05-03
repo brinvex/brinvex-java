@@ -285,6 +285,16 @@ public final class DateRange {
         return null;
     }
 
+    public DateRange extendToIncl(LocalDate dateIncl) {
+        if (dateIncl.isBefore(this.startIncl())) {
+            return new DateRange(dateIncl, this.endExcl());
+        }
+        if (dateIncl.isAfter(this.endIncl())) {
+            return new DateRange(this.startIncl(), dateIncl.plusDays(1));
+        }
+        return null;
+    }
+
     public DateRange shiftRight(int days) {
         return days == 0 ? this : new DateRange(this.startIncl().plusDays(days), this.endExcl().plusDays(days));
     }
