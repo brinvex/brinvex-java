@@ -9,6 +9,7 @@ import static com.brinvex.java.DateRange.dateRangeIncl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 public class DateRangeExtendTests {
 
@@ -39,8 +40,8 @@ public class DateRangeExtendTests {
         DateRange a = dateRangeIncl(LocalDate.parse("2025-03-10"), LocalDate.parse("2025-03-15")); // [2025-03-10,2025-03-16)
         DateRange b = dateRangeIncl(LocalDate.parse("2025-03-14"), LocalDate.parse("2025-03-20")); // overlap
 
-        assertNull(a.extendTo(b));
-        assertNull(b.extendTo(a));
+        assertSame(a, a.extendTo(b));
+        assertSame(b, b.extendTo(a));
     }
 
     @Test
@@ -48,8 +49,8 @@ public class DateRangeExtendTests {
         DateRange a = dateRangeIncl(LocalDate.parse("2025-04-01"), LocalDate.parse("2025-04-03")); // [2025-04-01,2025-04-04)
         DateRange b = dateRangeIncl(LocalDate.parse("2025-04-04"), LocalDate.parse("2025-04-05")); // adjacent at 4
 
-        assertNull(a.extendTo(b));
-        assertNull(b.extendTo(a));
+        assertSame(a, a.extendTo(b));
+        assertSame(b, b.extendTo(a));
     }
 
     @Test
@@ -85,7 +86,7 @@ public class DateRangeExtendTests {
     @Test
     void testExtendToInclInside() {
         DateRange a = dateRangeIncl(LocalDate.parse("2025-05-05"), LocalDate.parse("2025-05-10"));
-        assertNull(a.extendToIncl(LocalDate.parse("2025-05-07")));
+        assertSame(a, a.extendToIncl(LocalDate.parse("2025-05-07")));
     }
 
     @Test
@@ -109,6 +110,6 @@ public class DateRangeExtendTests {
     @Test
     void testExtendToExclInside() {
         DateRange a = dateRangeIncl(LocalDate.parse("2025-05-05"), LocalDate.parse("2025-05-10"));
-        assertNull(a.extendToExcl(LocalDate.parse("2025-05-08")));
+        assertSame(a, a.extendToExcl(LocalDate.parse("2025-05-08")));
     }
 }
