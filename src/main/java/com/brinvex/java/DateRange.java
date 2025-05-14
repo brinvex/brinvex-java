@@ -224,6 +224,26 @@ public final class DateRange {
         );
     }
 
+    public DateRange spanLeft(int days) {
+        if (days == 0) {
+            return this;
+        }
+        if (days < 0) {
+            throw new IllegalArgumentException("days must not be negative: days=%s, %s".formatted(days, this));
+        }
+        return new DateRange(startIncl().minusDays(days), endExcl());
+    }
+
+    public DateRange spanRight(int days) {
+        if (days == 0) {
+            return this;
+        }
+        if (days < 0) {
+            throw new IllegalArgumentException("days must not be negative: days=%s, %s".formatted(days, this));
+        }
+        return new DateRange(startIncl(), endExcl().plusDays(days));
+    }
+
     /**
      * Returns the intersection (overlapping portion) of this DateRange with the given {@code other} DateRange.
      * <p>
