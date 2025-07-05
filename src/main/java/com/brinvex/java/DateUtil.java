@@ -184,4 +184,26 @@ public class DateUtil {
         return results;
     }
 
+    /**
+     * Adds a number of days to the given date, but clamps the result within
+     * the same month. If the computed date falls before the first of the month,
+     * returns the first day; if it falls beyond the last day, returns the final day.
+     *
+     * @param date       the original LocalDate (must be non-null)
+     * @param daysToAdd  number of days to add (may be negative)
+     * @return a LocalDate within the same month as {@code date}, shifted by
+     *         {@code daysToAdd} but not before day 1 or after the month's end
+     */
+    public static LocalDate plusDaysClampedToMonth(LocalDate date, int daysToAdd) {
+        int targetDay = date.getDayOfMonth() + daysToAdd;
+        if (targetDay < 1) {
+            return date.withDayOfMonth(1);
+        } else {
+            int maxDay = date.lengthOfMonth();
+            if (targetDay > maxDay) {
+                return date.withDayOfMonth(maxDay);
+            }
+        }
+        return date.plusDays(daysToAdd);
+    }
 }
