@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -203,6 +204,10 @@ public class CollectionUtil {
 
     public static <E> ArrayList<E> asArrayList(Collection<E> collection) {
         return collection == null ? null : collection instanceof ArrayList<?> ? (ArrayList<E>) collection : new ArrayList<>(collection);
+    }
+
+    public static <K, V> HashMap<K, V> asHashMap(Map<K, V> map) {
+        return map == null ? null : map instanceof HashMap<K, V> ? (HashMap<K, V>) map : new HashMap<>(map);
     }
 
     public static <E> E getFirstThrowIfMore(Collection<E> collection) {
