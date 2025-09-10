@@ -45,6 +45,28 @@ public class StringUtil {
         return new String(chs, 0, count);
     }
 
+    public static String deleteAllWhitespacesAndSpaceChars(String str) {
+        if (str == null || str.isEmpty()) {
+            return str;
+        }
+        final int sz = str.length();
+        final char[] chs = new char[sz];
+        int count = 0;
+        for (int i = 0; i < sz; i++) {
+            char c = str.charAt(i);
+            if (!Character.isWhitespace(c) && !Character.isSpaceChar(c)) {
+                chs[count++] = c;
+            }
+        }
+        if (count == sz) {
+            return str;
+        }
+        if (count == 0) {
+            return LazyHolder.EMPTY;
+        }
+        return new String(chs, 0, count);
+    }
+
     public static String stripToNull(String s) {
         if (s == null) {
             return null;

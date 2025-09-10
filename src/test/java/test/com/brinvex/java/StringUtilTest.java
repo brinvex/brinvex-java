@@ -58,4 +58,38 @@ public class StringUtilTest {
         String clean = StringUtil.deleteEmojiPresentations(orig);
         assertEquals("abcd123", clean);
     }
+
+    @Test
+    void testNormalSpace() {
+        String input = "123 456"; // U+0020 normal space
+        assertEquals("123456", StringUtil.deleteAllWhitespaces(input));
+        assertEquals("123456", StringUtil.deleteAllWhitespacesAndSpaceChars(input));
+    }
+
+    @Test
+    void testNoBreakSpace() {
+        String input = "123\u00A0456"; // U+00A0 NO-BREAK SPACE
+        // isWhitespace = false → method 1 does not remove it
+        assertEquals("123\u00A0456", StringUtil.deleteAllWhitespaces(input));
+        // isSpaceChar = true → method 2 removes it
+        assertEquals("123456", StringUtil.deleteAllWhitespacesAndSpaceChars(input));
+    }
+
+    @Test
+    void testTab() {
+        String input = "123\t456"; // U+0009 TAB
+        // isWhitespace = true → method 1 removes it
+        assertEquals("123456", StringUtil.deleteAllWhitespaces(input));
+        // isSpaceChar = false → method 2 also removes because it also checks isWhitespace
+        assertEquals("123456", StringUtil.deleteAllWhitespacesAndSpaceChars(input));
+    }
+
+    @Test
+    void testMixedSpaces() {
+        String input = "1 2\u00A03\t4";
+        // method 1 removes normal space + tab, but not NBSP
+        assertEquals("12\u00A034", StringUtil.deleteAllWhitespaces(input));
+        // method 2 removes all of them
+        assertEquals("1234", StringUtil.deleteAllWhitespacesAndSpaceChars(input));
+    }
 }
