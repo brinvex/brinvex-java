@@ -319,9 +319,13 @@ public class CollectionUtil {
     }
 
     /*
-     * After migrating to Java 21 - allow only sequence collections
+     * todo 0 - After migrating to Java 21 - allow only sequence collections
      */
     public static <E> boolean removeAdjacentDuplicates(Collection<E> collection, BiPredicate<E, E> equalityPredicate) {
+        return removeAdjacentDuplicates(collection, equalityPredicate, false);
+    }
+
+    public static <E> boolean removeAdjacentDuplicates(Collection<E> collection, BiPredicate<E, E> equalityPredicate, boolean keepLast) {
         Iterator<E> iterator = collection.iterator();
 
         if (!iterator.hasNext()) {
@@ -332,6 +336,9 @@ public class CollectionUtil {
         E prev = iterator.next();
         while (iterator.hasNext()) {
             E current = iterator.next();
+            if (keepLast && !iterator.hasNext()) {
+                break;
+            }
             if (equalityPredicate.test(prev, current)) {
                 iterator.remove();
                 modified = true;
@@ -352,6 +359,10 @@ public class CollectionUtil {
 
     public static <E> boolean removeAdjacentValueDuplicates(Map<?, E> collection, BiPredicate<E, E> valueEqualityPredicate) {
         return removeAdjacentDuplicates(collection.entrySet(), (e1, e2) -> valueEqualityPredicate.test(e1.getValue(), e2.getValue()));
+    }
+
+    public static <E> boolean removeAdjacentValueDuplicates(Map<?, E> collection, BiPredicate<E, E> valueEqualityPredicate, boolean keepLast) {
+        return removeAdjacentDuplicates(collection.entrySet(), (e1, e2) -> valueEqualityPredicate.test(e1.getValue(), e2.getValue()), keepLast);
     }
 
     public static <K extends Comparable<? super K>, V> SortedMap<K, V> rangeSafeSubMap(SortedMap<K, V> map, K fromKeyIncl, K toKeyExcl) {

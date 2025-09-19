@@ -23,11 +23,30 @@ public class CollectionUtilTest {
 
     @Test
     public void removeAdjacentDuplicatesFromTreeMap() {
-        TreeMap<Integer, Integer> m1 = new TreeMap<>(Map.of(1, 11, 2, 22, 3, 33, 33, 33, 44, 44));
+        TreeMap<String, String> m1 = new TreeMap<>(
+                Map.of("1", "11", "2", "22", "3", "33", "3_1", "33", "4", "44", "4_1", "44")
+        );
         boolean modified = CollectionUtil.removeAdjacentValueDuplicates(m1);
         assertTrue(modified);
 
-        TreeMap<Integer, Integer> m2 = new TreeMap<>(Map.of(1, 11, 2, 22, 3, 33, 44, 44));
+        TreeMap<String, String> m2 = new TreeMap<>(
+                Map.of("1", "11", "2", "22", "3", "33", "4", "44")
+        );
+
+        assertEquals(m2, m1);
+    }
+
+    @Test
+    public void removeAdjacentDuplicatesFromTreeMap_keepLast() {
+        TreeMap<String, String> m1 = new TreeMap<>(
+                Map.of("1", "11", "2", "22", "3", "33", "3_1", "33", "4", "44", "4_1", "44")
+        );
+        boolean modified = CollectionUtil.removeAdjacentValueDuplicates(m1, String::equals, true);
+        assertTrue(modified);
+
+        TreeMap<String, String> m2 = new TreeMap<>(
+                Map.of("1", "11", "2", "22", "3", "33", "4", "44", "4_1", "44")
+        );
 
         assertEquals(m2, m1);
     }
