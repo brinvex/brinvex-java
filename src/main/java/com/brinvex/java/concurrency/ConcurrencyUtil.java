@@ -40,4 +40,16 @@ public class ConcurrencyUtil {
             return results;
         }
     }
+
+    public static <R> List<TaskResult<R>> executeAllWithVirtualThreadsUnchecked(
+            Collection<Callable<R>> tasks,
+            Duration timeout
+    ) {
+        try {
+            return executeAllWithVirtualThreads(tasks, timeout);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(e);
+        }
+    }
 }
