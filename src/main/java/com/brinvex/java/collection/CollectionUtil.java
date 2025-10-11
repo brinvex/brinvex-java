@@ -318,9 +318,6 @@ public class CollectionUtil {
         return result;
     }
 
-    /*
-     * todo 0 - After migrating to Java 21 - allow only sequence collections
-     */
     public static <E> boolean removeAdjacentDuplicates(Collection<E> collection, BiPredicate<E, E> equalityPredicate) {
         return removeAdjacentDuplicates(collection, equalityPredicate, false);
     }

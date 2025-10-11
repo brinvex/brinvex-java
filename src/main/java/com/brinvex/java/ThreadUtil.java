@@ -29,12 +29,14 @@ public class ThreadUtil {
         sleep(duration, interruptedException -> new RuntimeException("Thread interrupted while trying to sleep %s".formatted(duration), interruptedException));
     }
 
+    /**
+     * @deprecated Use {@link com.brinvex.java.concurrency.ConcurrencyUtil#executeAllWithVirtualThreads(Collection, Duration)}
+     */
     public static <R> List<R> invokeAllAndGetResults(
             int nThreads,
             Collection<Callable<R>> tasks,
             Duration taskTimeout
     ) throws InterruptedException, ExecutionException, TimeoutException {
-
         int nTasks = tasks.size();
         long taskTimeoutMillis = taskTimeout.toMillis();
 
@@ -63,6 +65,9 @@ public class ThreadUtil {
         }
     }
 
+    /**
+     * @deprecated Use {@link com.brinvex.java.concurrency.ConcurrencyUtil#executeAllWithVirtualThreads(Collection, Duration)}
+     */
     public static <T> void execute(
             int nThreads,
             Collection<Runnable> tasks
@@ -80,6 +85,9 @@ public class ThreadUtil {
         }
     }
 
+    /**
+     * @deprecated
+     */
     public static void executeAndSleep(Duration minDuration, Runnable task) throws InterruptedException {
         Instant start = Instant.now();
         RuntimeException exception = null;

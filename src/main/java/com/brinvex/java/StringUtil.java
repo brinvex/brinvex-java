@@ -96,9 +96,6 @@ public class StringUtil {
         return LazyHolder.FORMAT_CHARACTER_PATTERN.matcher(str).replaceAll("");
     }
 
-    /**
-     * Requires JAVA 21+
-     */
     public static String deleteEmojiPresentations(String str) {
         if (str == null) {
             return null;

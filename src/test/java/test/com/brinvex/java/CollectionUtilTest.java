@@ -4,9 +4,14 @@ import com.brinvex.java.collection.CollectionUtil;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
+import java.util.SequencedCollection;
+import java.util.SequencedMap;
+import java.util.SequencedSet;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -14,7 +19,8 @@ import java.util.TreeMap;
 import static com.brinvex.java.collection.CollectionUtil.rangeSafeSubMap;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
-import static java.util.Collections.emptySet;
+import static java.util.Collections.emptySortedMap;
+import static java.util.Collections.emptySortedSet;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -54,8 +60,8 @@ public class CollectionUtilTest {
     @Test
     public void removeAdjacentDuplicatesFromEmptyCollection() {
         CollectionUtil.removeAdjacentDuplicates(emptyList());
-        CollectionUtil.removeAdjacentDuplicates(emptyMap().entrySet());
-        CollectionUtil.removeAdjacentDuplicates(emptySet());
+        CollectionUtil.removeAdjacentDuplicates(emptySortedMap().entrySet());
+        CollectionUtil.removeAdjacentDuplicates(emptySortedSet());
     }
 
     @Test
@@ -66,13 +72,13 @@ public class CollectionUtilTest {
             assertEquals(List.of(1), c1);
         }
         {
-            Set<Integer> c1 = Set.of(1);
+            SequencedSet<Integer> c1 = new LinkedHashSet<>(Set.of(1));
             CollectionUtil.removeAdjacentDuplicates(c1);
             assertEquals(Set.of(1), c1);
         }
         {
-            Map<Integer, Integer> c1 = Map.of(1, 2);
-            CollectionUtil.removeAdjacentDuplicates(c1.entrySet());
+            SequencedMap<Integer, Integer> c1 = new LinkedHashMap<>(Map.of(1, 2));
+            CollectionUtil.removeAdjacentDuplicates((SequencedCollection<?>) c1.entrySet());
             assertEquals(Map.of(1, 2), c1);
         }
     }

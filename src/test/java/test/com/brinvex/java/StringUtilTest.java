@@ -51,7 +51,6 @@ public class StringUtilTest {
         assertEquals(s2, parts[1]);
     }
 
-    @EnabledForJreRange(min = JRE.JAVA_21)
     @Test
     public void removeEmojis() {
         String orig = "a✅b⭐c❌d123";
