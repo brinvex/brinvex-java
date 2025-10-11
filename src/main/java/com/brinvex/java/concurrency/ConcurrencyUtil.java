@@ -31,6 +31,9 @@ public class ConcurrencyUtil {
                     results.add(TaskResult.failure(new TimeoutException("Task timed out after %s".formatted(taskTimeout))));
                 } catch (ExecutionException e) {
                     results.add(TaskResult.failure(e.getCause()));
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    throw e;
                 }
             }
 
