@@ -450,23 +450,40 @@ public class CollectionUtil {
     }
 
     public static SortedMap<LocalDate, BigDecimal> sumConsecutiveEntries(SortedMap<LocalDate, BigDecimal> input, int groupSize, Supplier<Double> rand) {
+        return sumConsecutiveEntries(input, groupSize, n -> (int) (rand.get() * n), false);
+    }
+
+    public static SortedMap<LocalDate, BigDecimal> sumConsecutiveEntries(SortedMap<LocalDate, BigDecimal> input, int groupSize, Supplier<Double> rand, boolean removeZeros) {
         return sumConsecutiveEntries(input, groupSize, n -> (int) (rand.get() * n));
     }
 
     public static SortedMap<LocalDate, BigDecimal> sumConsecutiveEntries(SortedMap<LocalDate, BigDecimal> input, int groupSize, Function<Integer, Integer> random) {
-        if (input.isEmpty() || groupSize < 2) return new TreeMap<>(input);
+        return sumConsecutiveEntries(input, groupSize, random, false);
+    }
+
+    public static SortedMap<LocalDate, BigDecimal> sumConsecutiveEntries(
+            SortedMap<LocalDate, BigDecimal> input,
+            int groupSize,
+            Function<Integer, Integer> random,
+            boolean removeZeros
+    ) {
+        if (input.isEmpty() || groupSize < 2) {
+            return new TreeMap<>(input);
+        }
 
         SortedMap<LocalDate, BigDecimal> result = new TreeMap<>();
         List<Map.Entry<LocalDate, BigDecimal>> entries = new ArrayList<>(input.entrySet());
 
         int i = 0;
-        while (i < entries.size()) {
+        int size = entries.size();
+
+        while (i < size) {
             LocalDate startDate = entries.get(i).getKey();
             BigDecimal sum = entries.get(i).getValue();
 
             int j = i + 1;
             // Group consecutive days up to groupSize
-            while (j < entries.size()
+            while (j < size
                    && entries.get(j).getKey().equals(entries.get(j - 1).getKey().plusDays(1))
                    && (j - i) < groupSize) {
                 sum = sum.add(entries.get(j).getValue());
@@ -479,10 +496,14 @@ public class CollectionUtil {
                 // Choose one key from the group randomly
                 int chosenIndex = i + random.apply(actualGroupSize);
                 LocalDate chosenKey = entries.get(chosenIndex).getKey();
-                result.put(chosenKey, sum);
+                if (!removeZeros || sum.compareTo(BigDecimal.ZERO) != 0) {
+                    result.put(chosenKey, sum);
+                }
             } else {
                 // Single day — keep as-is
-                result.put(startDate, sum);
+                if (!removeZeros || sum.compareTo(BigDecimal.ZERO) != 0) {
+                    result.put(startDate, sum);
+                }
             }
 
             i = j; // Move to next group
