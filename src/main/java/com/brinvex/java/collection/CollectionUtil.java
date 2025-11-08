@@ -454,7 +454,7 @@ public class CollectionUtil {
     }
 
     public static SortedMap<LocalDate, BigDecimal> sumConsecutiveEntries(SortedMap<LocalDate, BigDecimal> input, int groupSize, Supplier<Double> rand, boolean removeZeros) {
-        return sumConsecutiveEntries(input, groupSize, n -> (int) (rand.get() * n));
+        return sumConsecutiveEntries(input, groupSize, n -> (int) (rand.get() * n), removeZeros);
     }
 
     public static SortedMap<LocalDate, BigDecimal> sumConsecutiveEntries(SortedMap<LocalDate, BigDecimal> input, int groupSize, Function<Integer, Integer> random) {
