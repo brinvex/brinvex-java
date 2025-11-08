@@ -7,16 +7,16 @@ import java.time.LocalDate;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import static com.brinvex.java.collection.CollectionUtil.reduceDateDecimalMapDensity;
+import static com.brinvex.java.collection.CollectionUtil.sumConsecutiveEntries;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ReduceDensityTest {
+public class SumConsecutiveEntriesTest {
 
     @Test
     void testEmptyInput() {
         SortedMap<LocalDate, BigDecimal> input = new TreeMap<>();
-        var result = reduceDateDecimalMapDensity(input, 3, i -> 0);
+        var result = sumConsecutiveEntries(input, 3, i -> 0);
         assertTrue(result.isEmpty());
     }
 
@@ -25,7 +25,7 @@ public class ReduceDensityTest {
         SortedMap<LocalDate, BigDecimal> input = new TreeMap<>();
         input.put(LocalDate.of(2025, 11, 1), BigDecimal.TEN);
 
-        var result = reduceDateDecimalMapDensity(input, 3, i -> 0);
+        var result = sumConsecutiveEntries(input, 3, i -> 0);
 
         assertEquals(1, result.size());
         assertEquals(BigDecimal.TEN, result.get(LocalDate.of(2025, 11, 1)));
@@ -37,7 +37,7 @@ public class ReduceDensityTest {
         input.put(LocalDate.of(2025, 11, 1), BigDecimal.valueOf(10));
         input.put(LocalDate.of(2025, 11, 2), BigDecimal.valueOf(5));
 
-        var result = reduceDateDecimalMapDensity(input, 2, i -> 0); // always pick first
+        var result = sumConsecutiveEntries(input, 2, i -> 0); // always pick first
 
         assertEquals(1, result.size());
         assertEquals(BigDecimal.valueOf(15), result.get(LocalDate.of(2025, 11, 1)));
@@ -49,7 +49,7 @@ public class ReduceDensityTest {
         input.put(LocalDate.of(2025, 11, 1), BigDecimal.valueOf(10));
         input.put(LocalDate.of(2025, 11, 2), BigDecimal.valueOf(5));
 
-        var result = reduceDateDecimalMapDensity(input, 2, i -> 1); // always pick second
+        var result = sumConsecutiveEntries(input, 2, i -> 1); // always pick second
 
         assertEquals(1, result.size());
         assertEquals(BigDecimal.valueOf(15), result.get(LocalDate.of(2025, 11, 2)));
@@ -62,7 +62,7 @@ public class ReduceDensityTest {
         input.put(LocalDate.of(2025, 11, 2), BigDecimal.valueOf(2));
         input.put(LocalDate.of(2025, 11, 3), BigDecimal.valueOf(3));
 
-        var result = reduceDateDecimalMapDensity(input, 3, i -> 1); // pick middle date
+        var result = sumConsecutiveEntries(input, 3, i -> 1); // pick middle date
 
         assertEquals(1, result.size());
         assertEquals(BigDecimal.valueOf(6), result.get(LocalDate.of(2025, 11, 2)));
@@ -77,7 +77,7 @@ public class ReduceDensityTest {
         input.put(LocalDate.of(2025, 11, 5), BigDecimal.valueOf(2));
 
         // Pick first in both groups
-        var result = reduceDateDecimalMapDensity(input, 2, i -> 0);
+        var result = sumConsecutiveEntries(input, 2, i -> 0);
 
         assertEquals(2, result.size());
         assertEquals(BigDecimal.valueOf(15), result.get(LocalDate.of(2025, 11, 1)));
@@ -94,7 +94,7 @@ public class ReduceDensityTest {
         input.put(LocalDate.of(2025, 11, 5), BigDecimal.valueOf(2));
 
         // Pick first in both groups
-        var result = reduceDateDecimalMapDensity(input, 2, i -> 0);
+        var result = sumConsecutiveEntries(input, 2, i -> 0);
 
         assertEquals(3, result.size());
         assertEquals(BigDecimal.valueOf(15), result.get(LocalDate.of(2025, 11, 1)));
@@ -114,7 +114,7 @@ public class ReduceDensityTest {
         input.put(LocalDate.of(2025, 11, 9), BigDecimal.valueOf(4));
 
         // Pick first in both groups
-        var result = reduceDateDecimalMapDensity(input, 2, i -> 0);
+        var result = sumConsecutiveEntries(input, 2, i -> 0);
 
         assertEquals(4, result.size());
         assertEquals(BigDecimal.valueOf(15), result.get(LocalDate.of(2025, 11, 1)));
@@ -129,7 +129,7 @@ public class ReduceDensityTest {
         input.put(LocalDate.of(2025, 11, 1), BigDecimal.valueOf(10));
         input.put(LocalDate.of(2025, 11, 3), BigDecimal.valueOf(5));
 
-        var result = reduceDateDecimalMapDensity(input, 2, i -> 0);
+        var result = sumConsecutiveEntries(input, 2, i -> 0);
 
         assertEquals(2, result.size());
         assertEquals(BigDecimal.valueOf(10), result.get(LocalDate.of(2025, 11, 1)));

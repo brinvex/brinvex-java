@@ -449,11 +449,11 @@ public class CollectionUtil {
         }
     }
 
-    public static SortedMap<LocalDate, BigDecimal> reduceDateDecimalMapDensity(SortedMap<LocalDate, BigDecimal> input, int groupSize, Supplier<Double> rand) {
-        return reduceDateDecimalMapDensity(input, groupSize, n -> (int) (rand.get() * n));
+    public static SortedMap<LocalDate, BigDecimal> sumConsecutiveEntries(SortedMap<LocalDate, BigDecimal> input, int groupSize, Supplier<Double> rand) {
+        return sumConsecutiveEntries(input, groupSize, n -> (int) (rand.get() * n));
     }
 
-    public static SortedMap<LocalDate, BigDecimal> reduceDateDecimalMapDensity(SortedMap<LocalDate, BigDecimal> input, int groupSize, Function<Integer, Integer> random) {
+    public static SortedMap<LocalDate, BigDecimal> sumConsecutiveEntries(SortedMap<LocalDate, BigDecimal> input, int groupSize, Function<Integer, Integer> random) {
         if (input.isEmpty() || groupSize < 2) return new TreeMap<>(input);
 
         SortedMap<LocalDate, BigDecimal> result = new TreeMap<>();
