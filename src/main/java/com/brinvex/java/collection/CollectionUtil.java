@@ -449,6 +449,10 @@ public class CollectionUtil {
         }
     }
 
+    public static SortedMap<LocalDate, BigDecimal> reduceDateDecimalMapDensity(SortedMap<LocalDate, BigDecimal> input, int groupSize, Supplier<Double> rand) {
+        return reduceDateDecimalMapDensity(input, groupSize, n -> (int) (rand.get() * n));
+    }
+
     public static SortedMap<LocalDate, BigDecimal> reduceDateDecimalMapDensity(SortedMap<LocalDate, BigDecimal> input, int groupSize, Function<Integer, Integer> random) {
         if (input.isEmpty() || groupSize < 2) return new TreeMap<>(input);
 
