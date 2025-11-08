@@ -1,5 +1,7 @@
 package com.brinvex.java.collection;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -19,6 +21,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
@@ -446,4 +449,41 @@ public class CollectionUtil {
         }
     }
 
+    public static SortedMap<LocalDate, BigDecimal> reduceDateDecimalMapDensity(SortedMap<LocalDate, BigDecimal> input, int groupSize, Function<Integer, Integer> random) {
+        if (input.isEmpty() || groupSize < 2) return new TreeMap<>(input);
+
+        SortedMap<LocalDate, BigDecimal> result = new TreeMap<>();
+        List<Map.Entry<LocalDate, BigDecimal>> entries = new ArrayList<>(input.entrySet());
+
+        int i = 0;
+        while (i < entries.size()) {
+            LocalDate startDate = entries.get(i).getKey();
+            BigDecimal sum = entries.get(i).getValue();
+
+            int j = i + 1;
+            // Group consecutive days up to groupSize
+            while (j < entries.size()
+                   && entries.get(j).getKey().equals(entries.get(j - 1).getKey().plusDays(1))
+                   && (j - i) < groupSize) {
+                sum = sum.add(entries.get(j).getValue());
+                j++;
+            }
+
+            int actualGroupSize = j - i;
+
+            if (actualGroupSize > 1) {
+                // Choose one key from the group randomly
+                int chosenIndex = i + random.apply(actualGroupSize);
+                LocalDate chosenKey = entries.get(chosenIndex).getKey();
+                result.put(chosenKey, sum);
+            } else {
+                // Single day — keep as-is
+                result.put(startDate, sum);
+            }
+
+            i = j; // Move to next group
+        }
+
+        return result;
+    }
 }
