@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 public class IterableUtil {
 
-    public static <T> void forEachPair(Iterable<T> iterable, PairConsumer<T> consumer) {
+    public static <T> void forEachConsecutivePair(Iterable<T> iterable, PairConsumer<T> consumer) {
         if (iterable == null) return;
 
         Iterator<T> iterator = iterable.iterator();
