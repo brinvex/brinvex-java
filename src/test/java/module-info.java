@@ -5,5 +5,6 @@ module test.com.brinvex.java {
     requires org.mockito;
     requires net.bytebuddy;
     requires net.bytebuddy.agent;
+    requires java.net.http;
     opens test.com.brinvex.java to org.junit.platform.commons,org.mockito;
 }

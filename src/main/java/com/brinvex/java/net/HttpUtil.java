@@ -60,7 +60,12 @@ public class HttpUtil {
         }
         i = type.indexOf("charset=");
         if (i >= 0) {
-            String value = type.substring(i + 8);
+            type = type.substring(i + 8);
+            i = type.indexOf(";");
+            if (i >= 0) {
+                type = type.substring(0, i);
+            }
+            String value = type;
             return Charset.forName(value);
         } else {
             return defaultCharset;
