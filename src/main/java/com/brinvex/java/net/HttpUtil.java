@@ -4,12 +4,10 @@ import java.net.HttpCookie;
 import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class HttpUtil {
@@ -43,33 +41,25 @@ public class HttpUtil {
     }
 
     /**
-     * Get the Charset from the Content-encoding header. Defaults to UTF_8
+     * Get the Charset from the Content-type header.
      * <p>
      * See jdk.internal.net.http.common.Utils#charsetFrom(java.net.http.HttpHeaders)
      */
-    public static Charset detectCharset(HttpHeaders headers) {
-        Charset defaultCharset = StandardCharsets.UTF_8;
-        Optional<String> typeOpt = headers.firstValue("Content-type");
-        if (typeOpt.isEmpty()) {
+    public static Charset detectCharset(HttpHeaders headers, Charset defaultCharset) {
+        String s = headers.firstValue("Content-type").orElse(null);
+        if (s == null) {
             return defaultCharset;
         }
-        String type = typeOpt.get();
-        int i = type.indexOf(";");
+        int i = s.indexOf("charset=");
         if (i >= 0) {
-            type = type.substring(i + 1);
-        }
-        i = type.indexOf("charset=");
-        if (i >= 0) {
-            type = type.substring(i + 8);
-            i = type.indexOf(";");
+            s = s.substring(i + 8);
+            i = s.indexOf(";");
             if (i >= 0) {
-                type = type.substring(0, i);
+                s = s.substring(0, i);
             }
-            String value = type;
-            return Charset.forName(value);
+            return Charset.forName(s);
         } else {
             return defaultCharset;
-
         }
     }
 
