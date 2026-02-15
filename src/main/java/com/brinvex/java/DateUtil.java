@@ -51,20 +51,20 @@ public class DateUtil {
         return date1 == null && date2 == null;
     }
 
-    public static LocalDate adjustWeekendToFriday(LocalDate day) {
-        return day == null ? null : switch (day.getDayOfWeek()) {
-            case SATURDAY -> day.minusDays(1);
-            case SUNDAY -> day.minusDays(2);
-            default -> day;
+    public static LocalDate adjustWeekendToFriday(LocalDate date) {
+        return date == null ? null : switch (date.getDayOfWeek()) {
+            case SATURDAY -> date.minusDays(1);
+            case SUNDAY -> date.minusDays(2);
+            default -> date;
         };
     }
 
-    public static LocalDate adjustToFirstDayOfPreviousYear(LocalDate day) {
-        return day == null ? null : day.withDayOfYear(1).minusYears(1);
+    public static LocalDate adjustToFirstDayOfPreviousYear(LocalDate date) {
+        return date == null ? null : date.withDayOfYear(1).minusYears(1);
     }
 
-    public static boolean isWeekend(LocalDate day) {
-        return switch (day.getDayOfWeek()) {
+    public static boolean isWeekend(LocalDate date) {
+        return switch (date.getDayOfWeek()) {
             case SATURDAY, SUNDAY -> true;
             default -> false;
         };
@@ -135,16 +135,16 @@ public class DateUtil {
         }
     }
 
-    public static boolean isFirstDayOfMonth(LocalDate day) {
-        return day.getDayOfMonth() == 1;
+    public static boolean isFirstDayOfMonth(LocalDate date) {
+        return date.getDayOfMonth() == 1;
     }
 
-    public static boolean isLastDayOfMonth(LocalDate day) {
-        return day.plusDays(1).getDayOfMonth() == 1;
+    public static boolean isLastDayOfMonth(LocalDate date) {
+        return date.plusDays(1).getDayOfMonth() == 1;
     }
 
-    public static boolean isFirstDayOfYear(LocalDate day) {
-        return day.getDayOfYear() == 1;
+    public static boolean isFirstDayOfYear(LocalDate date) {
+        return date.getDayOfYear() == 1;
     }
 
     public static List<DateRange> splitIntoYearlyIntervals(DateRange range) {
