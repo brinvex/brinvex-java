@@ -35,9 +35,13 @@ public class HttpUtil {
     }
 
     public static void appendCookies(HttpRequest.Builder reqBuilder, Collection<HttpCookie> cookies) {
-        for (HttpCookie cookie : cookies) {
-            reqBuilder.header("Cookie", cookie.getName() + "=" + cookie.getValue());
+        if (cookies.isEmpty()) {
+            return;
         }
+        String cookieHeader = cookies.stream()
+                .map(cookie -> cookie.getName() + "=" + cookie.getValue())
+                .collect(Collectors.joining("; "));
+        reqBuilder.header("Cookie", cookieHeader);
     }
 
     /**

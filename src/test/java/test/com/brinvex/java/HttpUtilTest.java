@@ -3,7 +3,10 @@ package test.com.brinvex.java;
 import com.brinvex.java.net.HttpUtil;
 import org.junit.jupiter.api.Test;
 
+import java.net.HttpCookie;
+import java.net.URI;
 import java.net.http.HttpHeaders;
+import java.net.http.HttpRequest;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
@@ -79,6 +82,21 @@ public class HttpUtilTest {
         {
             HttpHeaders h = HttpHeaders.of(Map.of("Content-type", List.of("name='history.csv';charset=windows-1250;application/msexcel")), (k, v) -> true);
             assertEquals(win1250, HttpUtil.detectCharset(h, UTF_8));
+        }
+    }
+
+    @Test
+    void appendCookies() {
+        URI uri = URI.create("https://example.com");
+        {
+            HttpRequest.Builder b = HttpRequest.newBuilder(uri);
+            HttpUtil.appendCookies(b, List.of(new HttpCookie("a", "1"), new HttpCookie("b", "2")));
+            assertEquals(List.of("a=1; b=2"), b.build().headers().allValues("Cookie"));
+        }
+        {
+            HttpRequest.Builder b = HttpRequest.newBuilder(uri);
+            HttpUtil.appendCookies(b, List.of());
+            assertEquals(List.of(), b.build().headers().allValues("Cookie"));
         }
     }
 }
