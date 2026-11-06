@@ -5,12 +5,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toCollection;
 
 public class StringUtil {
 
-    @SuppressWarnings("SpellCheckingInspection")
     public static class Constants {
         public static final char[] DIGITS_CHARS = "0123456789".toCharArray();
         public static final char[] UP_LETTER_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
@@ -134,16 +132,16 @@ public class StringUtil {
         }
         int length = s.length();
         if (length <= 1) {
-            return new String[] {s, ""};
+            return new String[]{s, ""};
         }
         int delimiterIndex = (int) (length / 100.0 * percentile);
         while (delimiterIndex < length) {
             if (Character.isWhitespace(s.charAt(delimiterIndex))) {
-                return new String[] {s.substring(0, delimiterIndex), s.substring(delimiterIndex)};
+                return new String[]{s.substring(0, delimiterIndex), s.substring(delimiterIndex)};
             }
             delimiterIndex++;
         }
-        return new String[] {s, ""};
+        return new String[]{s, ""};
     }
 
     public static String cleanMultiWhitespaces(String str) {

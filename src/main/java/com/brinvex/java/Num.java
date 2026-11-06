@@ -187,7 +187,7 @@ public class Num {
     }
 
     public static BigDecimal setScale1(BigDecimal bd) {
-        return setScale(bd, 2, DEFAULT_ROUNDING_MODE);
+        return setScale(bd, 1, DEFAULT_ROUNDING_MODE);
     }
 
     public static BigDecimal setScale2(BigDecimal bd) {
