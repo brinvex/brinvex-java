@@ -34,7 +34,7 @@ public class IOCallUtil {
         };
     }
 
-    public static <I, O> O uncheckedIO(NoArgIOCall<O> ioCall) {
+    public static <O> O uncheckedIO(NoArgIOCall<O> ioCall) {
         try {
             return ioCall.call();
         } catch (IOException e) {

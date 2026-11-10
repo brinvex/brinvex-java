@@ -4,6 +4,7 @@ import com.brinvex.java.IOCallUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -33,6 +34,19 @@ public class IOCallUtilTest {
             String expectedMsg = String.format(
                     "IOException occurred: type=[java.nio.file.NoSuchFileException], msg=[%s], input=[%s]", path, path);
             assertEquals(expectedMsg, ioException.getMessage());
+        }
+    }
+
+    @Test
+    public void wrapToUncheckedIO_noArg() {
+        assertEquals("x", IOCallUtil.uncheckedIO(() -> "x"));
+        try {
+            IOCallUtil.uncheckedIO(() -> {
+                throw new IOException("boom");
+            });
+            Assertions.fail();
+        } catch (UncheckedIOException ioException) {
+            assertEquals("IOException occurred: type=[java.io.IOException], msg=[boom]", ioException.getMessage());
         }
     }
 }
