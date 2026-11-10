@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -97,6 +98,14 @@ public class CollectorTest {
         var m1 = pairs.stream().collect(Collectors.toHashMap(Pair::x, Pair::y));
         assertEquals(HashMap.class, m1.getClass());
         assertEquals(Map.of(1, 10, 2, 20), m1);
+    }
+
+    @Test
+    void toLinkedSetCollector_keepsOrderInParallelStream() {
+        List<Integer> ints = IntStream.range(0, 100000).boxed().toList();
+
+        Set<Integer> s1 = ints.parallelStream().collect(Collectors.toLinkedSet());
+        assertEquals(ints, new ArrayList<>(s1));
     }
 
     @Test

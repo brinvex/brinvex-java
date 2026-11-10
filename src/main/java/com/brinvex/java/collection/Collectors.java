@@ -152,15 +152,10 @@ public class Collectors {
     public static <T> Collector<T, ?, Set<T>> toLinkedSet() {
         return new CollectorImpl<>(LinkedHashSet::new, Set::add,
                 (left, right) -> {
-                    if (left.size() < right.size()) {
-                        right.addAll(left);
-                        return right;
-                    } else {
-                        left.addAll(right);
-                        return left;
-                    }
+                    left.addAll(right);
+                    return left;
                 },
-                CH_UNORDERED_ID);
+                CH_ID);
     }
 
 }
