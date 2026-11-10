@@ -37,6 +37,11 @@ public class UriUtilTest {
         assertEquals("brinvex.com", UriUtil.extractDomainName("http://www66.brinvex.com:18445/path/"));
         assertEquals("brinvex.com", UriUtil.extractDomainName("wwwABC.brinvex.com/path/"));
         assertEquals("brinvex.com", UriUtil.extractDomainName("www123.brinvex.com"));
+
+        assertEquals("wwwexample.com", UriUtil.extractDomainName("https://wwwexample.com/x"));
+        assertEquals("wwwexample.com", UriUtil.extractDomainName("http://wwwexample.com:18445/path/"));
+        assertEquals("wwwexample.com", UriUtil.extractDomainName("wwwexample.com"));
+        assertEquals("www.com", UriUtil.extractDomainName("http://www.com/path/"));
     }
 
     @Test

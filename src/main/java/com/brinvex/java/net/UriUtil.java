@@ -40,7 +40,7 @@ public class UriUtil {
         if (port >= 0) {
             domainName = domainName.substring(0, port);
         }
-        domainName = domainName.replaceFirst("^[wW]{3}.*?\\.", "");
+        domainName = domainName.replaceFirst("^[wW]{3}[^.]*\\.(?=[^.]+\\.)", "");
         return domainName;
     }
 
