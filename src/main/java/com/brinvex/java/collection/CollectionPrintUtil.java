@@ -3,9 +3,7 @@ package com.brinvex.java.collection;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 
 public class CollectionPrintUtil {
@@ -34,10 +32,10 @@ public class CollectionPrintUtil {
             columnLengths.add(header.length());
         }
 
-        Map<E, List<String>> itemColumnStrings = new LinkedHashMap<>();
+        List<List<String>> itemColumnStrings = new ArrayList<>(items.size());
         for (E item : items) {
             List<String> itemStrings = new ArrayList<>(colCount);
-            itemColumnStrings.put(item, itemStrings);
+            itemColumnStrings.add(itemStrings);
             for (int i = 0, columnProjectionsLength = columnProjections.size(); i < columnProjectionsLength; i++) {
                 Function<E, Object> columnProjection = columnProjections.get(i);
                 Object columnValue = columnProjection.apply(item);
@@ -65,7 +63,7 @@ public class CollectionPrintUtil {
             sb.append(lineSeparator);
         }
         {
-            for (List<String> itemStrings : itemColumnStrings.values()) {
+            for (List<String> itemStrings : itemColumnStrings) {
                 StringBuilder line = new StringBuilder();
                 for (int c = 0; c < colCount; c++) {
                     if (c != 0) {
