@@ -69,7 +69,7 @@ public class StringUtil {
         if (s == null) {
             return null;
         }
-        s = s.trim();
+        s = s.strip();
         if (s.isEmpty()) {
             return null;
         }
@@ -80,7 +80,7 @@ public class StringUtil {
         if (s == null) {
             return LazyHolder.EMPTY;
         }
-        s = s.trim();
+        s = s.strip();
         if (s.isEmpty()) {
             return LazyHolder.EMPTY;
         }

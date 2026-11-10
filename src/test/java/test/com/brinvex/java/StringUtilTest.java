@@ -9,6 +9,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class StringUtilTest {
 
@@ -56,6 +57,28 @@ public class StringUtilTest {
         String orig = "a✅b⭐c❌d123";
         String clean = StringUtil.deleteEmojiPresentations(orig);
         assertEquals("abcd123", clean);
+    }
+
+    @Test
+    void stripToNull() {
+        assertNull(StringUtil.stripToNull(null));
+        assertNull(StringUtil.stripToNull(""));
+        assertNull(StringUtil.stripToNull(" \t\n"));
+        assertEquals("x", StringUtil.stripToNull(" x "));
+        assertEquals("a b", StringUtil.stripToNull("\ta b\n"));
+        assertEquals("x", StringUtil.stripToNull(" x ")); // U+2003 EM SPACE
+        assertNull(StringUtil.stripToNull(" "));
+    }
+
+    @Test
+    void stripToEmpty() {
+        assertEquals("", StringUtil.stripToEmpty(null));
+        assertEquals("", StringUtil.stripToEmpty(""));
+        assertEquals("", StringUtil.stripToEmpty(" \t\n"));
+        assertEquals("x", StringUtil.stripToEmpty(" x "));
+        assertEquals("a b", StringUtil.stripToEmpty("\ta b\n"));
+        assertEquals("x", StringUtil.stripToEmpty(" x ")); // U+2003 EM SPACE
+        assertEquals("", StringUtil.stripToEmpty(" "));
     }
 
     @Test
