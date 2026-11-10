@@ -33,7 +33,7 @@ These are not reproduced as failures, but each one is a trap or leftover code.
 | 10 | `HttpUtil.detectCharset` fails on quoted values                          | `Content-Type: text/html; charset="utf-8"` makes `Charset.forName` throw. Spaces and surrounding quotes are now stripped first; covered by `HttpUtilTest`.                               | Done         |
 | 11 | `ThreadUtil` has unused imports                                          | About 8 imports were left over from the removed concurrency code. Removed.                                                                                                              | Done         |
 | 12 | `IOCallUtil.uncheckedIO(NoArgIOCall)` has an unused type parameter `<I>` | Removed; the no-arg overload is now covered by `IOCallUtilTest`.                                                                                                                       | Done         |
-| 13 | `FtpUtil.fetch` uses the deprecated `new URL(String)`                    | It is deprecated since Java 20, and the method works for any URL, not just FTP. Fix: use `URI.create(url).toURL()` and consider a more general name.                                    | Ready to fix |
+| 13 | `FtpUtil.fetch` uses the deprecated `new URL(String)`                    | It is deprecated since Java 20, and the method works for any URL, not just FTP. Now uses `URI.create(url).toURL()`, covered by `FtpUtilTest`. Not renamed (API change).                 | Done         |
 
 ## Already built into Java 21
 
