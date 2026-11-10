@@ -28,7 +28,7 @@ These are not reproduced as failures, but each one is a trap or leftover code.
 
 | #  | Finding                                                                  | Details and fix                                                                                                                                                                         | Status       |
 |----|--------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------|
-| 8  | `StringUtil.Constants` exposes mutable arrays                            | Any caller can change `DIGITS_CHARS[0]` for everyone. Decision: make it private. See [implementation notes](#item-8-make-stringutilconstants-private).                                  | Ready to fix |
+| 8  | `StringUtil.Constants` exposes mutable arrays                            | Any caller can change `DIGITS_CHARS[0]` for everyone. Made private; the test that used it was removed. API change: check other brinvex projects for `StringUtil.Constants` before releasing. | Done         |
 | 9  | `HttpUtil.appendCookies` sends one `Cookie` header per cookie            | RFC 6265 expects a single header with values joined by `"; "`. Cookies are now joined into one header, with no header for an empty collection; covered by `HttpUtilTest.appendCookies`. | Done         |
 | 10 | `HttpUtil.detectCharset` fails on quoted values                          | `Content-Type: text/html; charset="utf-8"` makes `Charset.forName` throw. Fix: strip quotes and spaces first.                                                                           | Ready to fix |
 | 11 | `ThreadUtil` has unused imports                                          | About 8 imports were left over from the removed concurrency code. Removed.                                                                                                              | Done         |
@@ -68,18 +68,3 @@ These change the public API, so batch them into one release with a clear changel
 | 29 | Rename `LazyConstant`                           | If `java.lang.LazyConstant` becomes final, `import com.brinvex.java.*` gives an "ambiguous name" compile error.                                                                                                             | Not decided yet |
 | 30 | Rename `com.brinvex.java.collection.Collectors` | It shares its name with `java.util.stream.Collectors`, and `HttpUtil` already imports the JDK one. `MoreCollectors` or `BxCollectors` avoids the clash.                                                                     | Not decided yet |
 | 31 | Turn `DateRange` into a `record`                | The cached `startExcl`/`endIncl` fields make it mutable to save one `minusDays(1)` call. A record with computed accessors is simpler and immutable.                                                                         | Not decided yet |
-
-## Implementation notes
-
-### Item 8: make `StringUtil.Constants` private
-
-1. In `StringUtil.java`, change `public static class Constants` to `private static class Constants`. Leave the three fields as they are.
-2. In `StringUtilTest.generateWords`, delete the first `assertEquals` (the one that uses `StringUtil.Constants.UP_LETTER_CHARS`). Keep the other two assertions;
-   they don't use `Constants`.
-3. Run `mvnw test`.
-
-Notes:
-
-- Nothing in `StringUtil` itself uses `Constants`, so once it is private it is dead code and the IDE will flag it as unused. Deleting the class would have the
-  same effect for callers.
-- This is an API change. Check the other brinvex projects for `StringUtil.Constants` before releasing.

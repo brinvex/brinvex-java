@@ -9,7 +9,7 @@ import static java.util.stream.Collectors.toCollection;
 
 public class StringUtil {
 
-    public static class Constants {
+    private static class Constants {
         public static final char[] DIGITS_CHARS = "0123456789".toCharArray();
         public static final char[] UP_LETTER_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
         public static final char[] UP_LETTER_AND_DIGIT_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray();
