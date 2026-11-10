@@ -86,6 +86,31 @@ public class HttpUtilTest {
     }
 
     @Test
+    void detectCharset_quotedOrPadded() {
+        Charset win1250 = Charset.forName("windows-1250");
+        {
+            HttpHeaders h = HttpHeaders.of(Map.of("Content-type", List.of("text/html; charset=\"windows-1250\"")), (k, v) -> true);
+            assertEquals(win1250, HttpUtil.detectCharset(h, UTF_8));
+        }
+        {
+            HttpHeaders h = HttpHeaders.of(Map.of("Content-type", List.of("text/html; charset='windows-1250'")), (k, v) -> true);
+            assertEquals(win1250, HttpUtil.detectCharset(h, UTF_8));
+        }
+        {
+            HttpHeaders h = HttpHeaders.of(Map.of("Content-type", List.of("text/html; charset=\"windows-1250\"; name='history.csv'")), (k, v) -> true);
+            assertEquals(win1250, HttpUtil.detectCharset(h, UTF_8));
+        }
+        {
+            HttpHeaders h = HttpHeaders.of(Map.of("Content-type", List.of("text/html; charset=windows-1250 ; name='history.csv'")), (k, v) -> true);
+            assertEquals(win1250, HttpUtil.detectCharset(h, UTF_8));
+        }
+        {
+            HttpHeaders h = HttpHeaders.of(Map.of("Content-type", List.of("text/html")), (k, v) -> true);
+            assertEquals(UTF_8, HttpUtil.detectCharset(h, UTF_8));
+        }
+    }
+
+    @Test
     void appendCookies() {
         URI uri = URI.create("https://example.com");
         {

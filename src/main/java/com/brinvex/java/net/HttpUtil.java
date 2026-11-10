@@ -61,6 +61,10 @@ public class HttpUtil {
             if (i >= 0) {
                 s = s.substring(0, i);
             }
+            s = s.strip();
+            if (s.length() >= 2 && (s.charAt(0) == '"' || s.charAt(0) == '\'') && s.charAt(s.length() - 1) == s.charAt(0)) {
+                s = s.substring(1, s.length() - 1);
+            }
             return Charset.forName(s);
         } else {
             return defaultCharset;
