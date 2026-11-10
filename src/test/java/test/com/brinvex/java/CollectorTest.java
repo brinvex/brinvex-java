@@ -89,6 +89,17 @@ public class CollectorTest {
     }
 
     @Test
+    void toHashMapCollector_ok() {
+        record Pair(int x, int y) {
+        }
+        List<Pair> pairs = List.of(new Pair(1, 10), new Pair(2, 20));
+
+        var m1 = pairs.stream().collect(Collectors.toHashMap(Pair::x, Pair::y));
+        assertEquals(HashMap.class, m1.getClass());
+        assertEquals(Map.of(1, 10, 2, 20), m1);
+    }
+
+    @Test
     void toEnumMap() {
         Stream<String> sourceItemStream = Stream.of(
                         Month.JANUARY,

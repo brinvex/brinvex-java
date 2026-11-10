@@ -93,7 +93,7 @@ public class Collectors {
                 CH_ID);
     }
 
-    public static <T, K, U> Collector<T, ?, LinkedHashMap<K, U>> toHashMap(
+    public static <T, K, U> Collector<T, ?, HashMap<K, U>> toHashMap(
             Function<? super T, ? extends K> keyMapper,
             Function<? super T, ? extends U> valueMapper
     ) {
